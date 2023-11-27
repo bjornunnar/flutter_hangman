@@ -1,8 +1,9 @@
 import 'package:hangman/models/tmdb.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'dart:math' as math;
+import 'package:hangman/models/classes.dart';
 
-Future<String> getMovieTitle({int year = 0, required int difficulty}) async {
+Future<Movie> getMovieTitle({int year = 0, required int difficulty}) async {
   // the response has 20 items per page, so we get a random one of those
   final int itemOnPage = math.Random().nextInt(19);
 
@@ -20,13 +21,13 @@ Future<String> getMovieTitle({int year = 0, required int difficulty}) async {
     year: year,
     page: pageNumber,
   );
+  Map thing = response["results"][itemOnPage];
+
+  Movie currentMovie = Movie(title: thing["title"], overview: ["results"][itemOnPage]["overview"], releaseDate: ["results"][itemOnPage]["release_date"])
   final String movieTitle = response["results"][itemOnPage]["title"];
-  return movieTitle;
+  return currentMovie;
 }
 
 // we want to have more details on the movie for hints.
 // could create a movie class to return a bit more info
-
-class Movie({required String title, required String overview, required DateTime releaseDate})
-
-
+// note: a single title display was working but when i try to get more values into a movie class, it breaks

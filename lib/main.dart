@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/env/env.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,7 +13,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello Github!'),
+          child: Text(Env.key1),
         ),
       ),
     );

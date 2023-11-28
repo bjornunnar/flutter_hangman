@@ -29,11 +29,11 @@ class Hint {
     required this.cleanTitleAsList, 
     required this.hiddenTitle, 
     required this.hiddenTitleAsList, 
-    required this.guessedLetters});
+    required this.guessedLetters,});
 }
 
 class Settings{
-  double difficulty;
+  int difficulty;
   int? customYear;
   String? customTitle;
 

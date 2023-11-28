@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/data/hint.dart';
 import 'package:hangman/data/movie_details.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/game_screen.dart';
@@ -33,6 +34,27 @@ class _HangmanState extends State<Hangman>{
       builder: (ctx) => SettingsOverlay(currentSettings: currentSettings, updateSettings: updateSettings));
   }
 
+  void _playGame() async {
+    if (currentSettings.customTitle != null){
+      Hint currentHint = constructHint(customTitle: currentSettings.customTitle);
+      setState(() {
+      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
+    });
+    } else if (currentSettings.customYear != null){
+      Movie currentMovie = await getMovie(difficulty: currentSettings.difficulty, year: currentSettings.customYear!);
+      Hint currentHint = constructHint(movie: currentMovie);
+      setState(() {
+      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
+    });
+    } else {
+      Movie currentMovie = await getMovie(difficulty: currentSettings.difficulty);
+      Hint currentHint = constructHint(movie: currentMovie);
+      setState(() {
+      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
+    });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -43,6 +65,7 @@ class _HangmanState extends State<Hangman>{
             Text("${currentSettings.difficulty}"),
             Text("${currentSettings.customTitle}"),
             Text("${currentSettings.customYear}"),
+            TextButton(onPressed: _playGame, child: const Text("Play!")),
           ],
         ),
       ),

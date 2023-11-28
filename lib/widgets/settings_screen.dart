@@ -18,7 +18,7 @@ class SettingsOverlay extends StatefulWidget {
 class _SettingsOverlayState extends State<SettingsOverlay> {
   final _titleController = TextEditingController();
   final _yearController = TextEditingController();
-  late double sliderDifficultySetting = widget.currentSettings.difficulty;
+  late double sliderDifficultySetting = (widget.currentSettings.difficulty).toDouble();
 
   // tells flutter to shut down the TextEditingController when the overlay is closed
   // otherwise it lives on in memory
@@ -41,7 +41,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   void _onSaveSettings(){
     // logic to save current inputs
     // check if the input fields are empty first, if so we don't include them.
-    double newDifficulty = sliderDifficultySetting;
+    int newDifficulty = sliderDifficultySetting.floor();
     Settings newSettings = Settings(difficulty: newDifficulty);
     if (_titleController.text.isNotEmpty){
       newSettings.customTitle = _titleController.text;

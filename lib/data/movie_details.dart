@@ -17,7 +17,9 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
   }
 
   // this looks to be constant, we _can_ get the current value by
-  // querying https://api.themoviedb.org/3/configuration but this should do
+  // querying https://api.themoviedb.org/3/configuration but this should do.
+  // size may be too large,
+  // other sizes are: "w92", "w154", "w185", "w342", "w500", "w780", "original"
   const String posterPath = "http://image.tmdb.org/t/p/w500";
 
   Map response = await tmdb.v3.discover.getMovies(
@@ -30,7 +32,7 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
     id: response["results"][itemOnPage]["id"],
     title: response["results"][itemOnPage]["title"], 
     overview: response["results"][itemOnPage]["overview"], 
-    releaseDate: response["results"][itemOnPage]["release_date"],
+    releaseYear: response["results"][itemOnPage]["release_date"].toString().substring(0,4),
     poster: '$posterPath${response["results"][itemOnPage]["poster_path"]}'
     );
 

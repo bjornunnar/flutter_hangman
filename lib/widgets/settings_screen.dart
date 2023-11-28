@@ -18,6 +18,7 @@ class SettingsOverlay extends StatefulWidget {
 class _SettingsOverlayState extends State<SettingsOverlay> {
   final _titleController = TextEditingController();
   final _yearController = TextEditingController();
+  late double sliderDifficultySetting = widget.currentSettings.difficulty;
 
   // tells flutter to shut down the TextEditingController when the overlay is closed
   // otherwise it lives on in memory
@@ -28,11 +29,9 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     super.dispose();
   }
 
-  double sliderDifficultySetting = 3;
+  
 
   // updates the value of the difficulty slider.
-  // we rebuild the state of the entire settings overlay, which may cause problems..
-  // maybe better to build the slider separately? 
   void sliderUpdate(double value){
     setState(() {
       sliderDifficultySetting = value;
@@ -51,6 +50,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       int? newYear = int.tryParse(_yearController.text);
       if (newYear! > 1919 && newYear < 2024){
         newSettings.customYear = newYear;
+      } else {
+        // open error dialog, and then return?
       }
     }
     setState(() {
@@ -62,13 +63,15 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   
   @override
   Widget build(context) {
+    
+
     return Column(children: [
       Text("Difficulty"),
       Slider(
         value: sliderDifficultySetting, 
         min: 1, 
         max: 5, 
-        divisions: 5, 
+        divisions: 4, 
         onChanged: (double newValue){sliderUpdate(newValue);}
       ),
       Text("Choose a Title"),

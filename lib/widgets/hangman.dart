@@ -35,14 +35,15 @@ class _HangmanState extends State<Hangman>{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              TextButton(onPressed: _openSettings, child: const Text("Settings")),
-            ],
-          ),
+    return  Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            TextButton(onPressed: _openSettings, child: const Text("Settings")),
+            Text("${currentSettings.difficulty}"),
+            Text("${currentSettings.customTitle}"),
+            Text("${currentSettings.customYear}"),
+          ],
         ),
       ),
     );

@@ -1,7 +1,9 @@
 class Movie {
+  int id;
   String title;
   String overview;
   String releaseDate;
+  String poster;
 
-  Movie({this.title = "", this.overview = "", this.releaseDate = ""});
+  Movie({required this.id, required this.title, required this.overview, required this.releaseDate, required this.poster});
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/data/movie_title.dart';
+import 'package:hangman/models/classes.dart';
 
 void main() {
   runApp(const MainApp());
@@ -32,19 +33,24 @@ class TMDBList extends StatefulWidget {
 class _TMBDListState extends State<TMDBList> {
   @override
   Widget build(context) {
-    return FutureBuilder<String>(
-      future: getMovieTitle(difficulty: 2), // here we call the api
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+    return FutureBuilder<Movie>(
+      future: getMovie(difficulty: 2), // here we call the api
+      builder: (BuildContext context, AsyncSnapshot<Movie> snapshot) {
         // AsyncSnapshot<Your object type>
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Text('Please wait its loading...'));
+          return const Center(child: Text('Please wait its loading...'));
         } else {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            return Center(
-                child: Text(
-                    '${snapshot.data}')); // snapshot.data  :- get your object which is pass from your downloadData() function
+            return Column(
+              children: [
+                Image(image: NetworkImage(snapshot.data!.poster)),
+                Center(
+                    child: Text(
+                        '${snapshot.data!.title}')),
+              ],
+            ); // snapshot.data  :- get your object which is pass from your downloadData() function
           }
         }
       },

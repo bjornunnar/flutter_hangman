@@ -3,7 +3,7 @@ import 'package:tmdb_api/tmdb_api.dart';
 import 'dart:math' as math;
 import 'package:hangman/models/classes.dart';
 
-Future<Movie> getMovieTitle({int year = 0, required int difficulty}) async {
+Future<Movie> getMovie({int year = 0, required int difficulty}) async {
   // the response has 20 items per page, so we get a random one of those
   final int itemOnPage = math.Random().nextInt(19);
 
@@ -16,15 +16,24 @@ Future<Movie> getMovieTitle({int year = 0, required int difficulty}) async {
     year = math.Random().nextInt(30) + 1980;
   }
 
+  // this looks to be constant, we _can_ get the current value by
+  // querying https://api.themoviedb.org/3/configuration but this should do
+  const String posterPath = "http://image.tmdb.org/t/p/w500";
+
   Map response = await tmdb.v3.discover.getMovies(
     sortBy: SortMoviesBy.popularityDesc,
     year: year,
     page: pageNumber,
   );
-  Map thing = response["results"][itemOnPage];
 
-  Movie currentMovie = Movie(title: thing["title"], overview: ["results"][itemOnPage]["overview"], releaseDate: ["results"][itemOnPage]["release_date"])
-  final String movieTitle = response["results"][itemOnPage]["title"];
+  Movie currentMovie = Movie(
+    id: response["results"][itemOnPage]["id"],
+    title: response["results"][itemOnPage]["title"], 
+    overview: response["results"][itemOnPage]["overview"], 
+    releaseDate: response["results"][itemOnPage]["release_date"],
+    poster: '$posterPath${response["results"][itemOnPage]["poster_path"]}'
+    );
+
   return currentMovie;
 }
 

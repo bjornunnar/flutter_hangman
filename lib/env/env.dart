@@ -1,4 +1,8 @@
-
+// using ENVied to generate variables for API keys
+// to implement elsewhere, create an .env file at root,
+// using the varNames below, then run
+// 'dart run build_runner build' to generate the env.g.dart file
+// and add both .env and env.g.dart to .gitignore
 import 'package:envied/envied.dart';
 
 part 'env.g.dart';

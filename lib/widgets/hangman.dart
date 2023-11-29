@@ -21,7 +21,13 @@ class _HangmanState extends State<Hangman>{
   // setting default settings w/ medium difficulty  
   Settings currentSettings = Settings(difficulty: 3); 
 
-  // make dummy data
+  // quit function to be passed to GameScreen
+  void quitGame(){
+    setState(() {
+      gameOn =false;
+      currentSettings = Settings(difficulty: currentSettings.difficulty);
+    });
+  }
 
 
   // to be called when user saves on Settings overlay, updates the current settings
@@ -45,19 +51,19 @@ class _HangmanState extends State<Hangman>{
       Hint currentHint = constructHint(customTitle: currentSettings.customTitle, difficulty: currentSettings.difficulty);
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint);
+        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
     } else if (currentSettings.customYear != null){
       Hint currentHint = constructHint(movie: await getMovie(difficulty: currentSettings.difficulty, year: currentSettings.customYear!));
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint);
+        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
     } else {
       Hint currentHint = constructHint(movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint);
+        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
     }
   }
@@ -65,9 +71,20 @@ class _HangmanState extends State<Hangman>{
   @override
 
   Widget build(BuildContext context) {
+    // this only gets called when user clicks PLAY
     if (gameOn){
-      return Scaffold(body: Center(child: Column(children:[GameScreenWaiting],)));
+      return Scaffold(
+        body: Center(
+          child: Column(
+            children:[
+              GameScreenWaiting
+            ],
+          )
+        )
+      );
     } else {
+
+    // and this is the starting screen
 
     return  Scaffold(
       body: Center(

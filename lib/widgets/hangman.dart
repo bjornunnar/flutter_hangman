@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hangman/data/hint.dart';
+import 'package:hangman/data/construct_hint.dart';
 import 'package:hangman/data/movie_details.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/game_screen.dart';
@@ -15,8 +15,14 @@ class Hangman extends StatefulWidget {
   }
 }
 class _HangmanState extends State<Hangman>{
-  String activeScreen = "start-screen";
-  Settings currentSettings = Settings(difficulty: 3); // default settings w/ medium difficulty
+
+  bool gameOn = false; // game has not started yet
+  Widget GameScreenWaiting = Container(); // placeholder value
+  // setting default settings w/ medium difficulty  
+  Settings currentSettings = Settings(difficulty: 3); 
+
+  // make dummy data
+
 
   // to be called when user saves on Settings overlay, updates the current settings
   void updateSettings(Settings data) {
@@ -36,27 +42,33 @@ class _HangmanState extends State<Hangman>{
 
   void _playGame() async {
     if (currentSettings.customTitle != null){
-      Hint currentHint = constructHint(customTitle: currentSettings.customTitle);
+      Hint currentHint = constructHint(customTitle: currentSettings.customTitle, difficulty: currentSettings.difficulty);
       setState(() {
-      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
-    });
+        gameOn = true;
+        GameScreenWaiting = GameScreen(hint: currentHint);
+      });
     } else if (currentSettings.customYear != null){
-      Movie currentMovie = await getMovie(difficulty: currentSettings.difficulty, year: currentSettings.customYear!);
-      Hint currentHint = constructHint(movie: currentMovie);
+      Hint currentHint = constructHint(movie: await getMovie(difficulty: currentSettings.difficulty, year: currentSettings.customYear!));
       setState(() {
-      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
-    });
+        gameOn = true;
+        GameScreenWaiting = GameScreen(hint: currentHint);
+      });
     } else {
-      Movie currentMovie = await getMovie(difficulty: currentSettings.difficulty);
-      Hint currentHint = constructHint(movie: currentMovie);
+      Hint currentHint = constructHint(movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
-      activeScreen = "game-screen"; // <-- replace with logic to start game with correct vars
-    });
+        gameOn = true;
+        GameScreenWaiting = GameScreen(hint: currentHint);
+      });
     }
   }
 
   @override
+
   Widget build(BuildContext context) {
+    if (gameOn){
+      return Scaffold(body: Center(child: Column(children:[GameScreenWaiting],)));
+    } else {
+
     return  Scaffold(
       body: Center(
         child: Column(
@@ -70,5 +82,6 @@ class _HangmanState extends State<Hangman>{
         ),
       ),
     );
+  }
   }
 }

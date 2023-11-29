@@ -48,10 +48,11 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     }
     if (_yearController.text.isNotEmpty){
       int? newYear = int.tryParse(_yearController.text);
-      if (newYear! > 1919 && newYear < 2024){
+      if (newYear == null || newYear > 1919 && newYear < 2024){
         newSettings.customYear = newYear;
       } else {
-        // open error dialog, and then return?
+        _showDialog();
+        return;
       }
     }
     setState(() {
@@ -59,6 +60,23 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     });
     // and pop context!
     Navigator.pop(context);
+  }
+
+  void _showDialog(){
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text("Quick, what year is it?!"),
+      content: const Text(
+        "The chosen year must be between 1920 and 2023. I make the rules."),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+          },
+          child: const Text("FINE"))
+      ],
+    ));
   }
   
   @override
@@ -86,6 +104,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       Text("Pick the Year"),
       Expanded(
         child: TextField(
+          keyboardType: TextInputType.number,
           controller: _yearController,
           maxLength: 4,
           decoration:

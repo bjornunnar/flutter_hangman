@@ -14,8 +14,8 @@ class Movie {
 }
 
 class Hint {
-  int difficulty;
-  int chosenYear;
+  Movie? movie;
+  int tries;
   String cleanTitle;
   List cleanTitleAsList;
   String hiddenTitle;
@@ -23,8 +23,8 @@ class Hint {
   List guessedLetters;
 
   Hint({
-    this.difficulty = 3, 
-    this.chosenYear = 1, 
+    this.movie,
+    this.tries = 6,
     required this.cleanTitle, 
     required this.cleanTitleAsList, 
     required this.hiddenTitle, 

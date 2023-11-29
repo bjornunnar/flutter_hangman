@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
 
 class GameScreen extends StatefulWidget {
-  final Movie movie;
   final Hint hint;
-  GameScreen({super.key, required this.movie, required this.hint});
+  GameScreen({super.key, required this.hint});
 
   @override
   State<GameScreen> createState() {
@@ -15,6 +14,11 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(context) {
-    return Text("");
+    return Column(
+      children: [
+        Text(widget.hint.cleanTitle),
+        Text(widget.hint.hiddenTitle),
+      ],
+    );
   }
 }

@@ -9,7 +9,7 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
 
   // the list is sorted by most popular, which gives us a sort of difficulty setting.
   // the user can widen the pool of available answers.
-  final int pageNumber = (math.Random().nextInt(9) + 1) * difficulty;
+  final int pageNumber = (math.Random().nextInt(difficulty) + 1);
 
   // and if no year is given, we give ourselves a random one
   if (year == 0) {
@@ -20,7 +20,7 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
   // querying https://api.themoviedb.org/3/configuration but this should do.
   // size may be too large,
   // other sizes are: "w92", "w154", "w185", "w342", "w500", "w780", "original"
-  const String posterPath = "http://image.tmdb.org/t/p/w500";
+  const String posterPath = "http://image.tmdb.org/t/p/w342";
 
   Map response = await tmdb.v3.discover.getMovies(
     sortBy: SortMoviesBy.popularityDesc,

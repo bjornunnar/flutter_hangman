@@ -14,7 +14,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  String currentLetter = "";
+  String currentLetter = "_";
 
   void _updatePlaceholder(String letter) {
     setState(() {
@@ -28,6 +28,7 @@ class _GameScreenState extends State<GameScreen> {
       for (List row in qwertyKeyboard) {
         row.remove(letter);
       }
+      currentLetter = "_";
     });
   }
 
@@ -43,62 +44,82 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.blue,
+    final double availableHeight = MediaQuery.of(context).size.height;
+    final double availableWidth = MediaQuery.of(context).size.width;
+
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: availableWidth * 0.65,
+                height: 300,
+                color: Colors.blue,
+              ),
+              Container(
+                  height: availableWidth * 0.3,
+                  width: 300,
+                  child: GuessedLettersView(widget.hint.guessedLetters)),
+            ],
+          ),
+          Text(widget.hint.cleanTitle),
+          Text(
+            widget.hint.hiddenTitle,
+            style: TextStyle(letterSpacing: 2.0, fontSize: 16),
+          ),
+          ElevatedButton.icon(
+              onPressed: _onQuit,
+              icon: const Icon(Icons.transit_enterexit),
+              label: const Text("Quit")),
+          Container(
+            child: Text(
+              currentLetter,
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Expanded(child: GuessedLettersView(widget.hint.guessedLetters)),
-          ],
-        ),
-        Text(widget.hint.cleanTitle),
-        Text(widget.hint.hiddenTitle),
-        TextButton(onPressed: _onQuit, child: Text("Quit")),
-        Container(
-          child: Text(currentLetter),
-        ),
-        Row(
-          children: [
-            Column(
-              children: [
-                for (List row in qwertyKeyboard)
-                  Row(
-                    children: [
-                      for (String key in row)
-                        Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _updatePlaceholder(key);
-                              },
-                              child: Text(key),
-                            )),
-                    ],
-                  )
-              ],
-            ),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: () {
-                _confirmGuess(currentLetter);
-              },
-              icon: const Icon(Icons.fort),
-              label: const Text("GO"),
-            ),
-          ],
-        )
-      ],
+          ),
+          Row(
+            children: [
+              Column(
+                children: [
+                  for (List row in qwertyKeyboard)
+                    Row(
+                      children: [
+                        for (String key in row)
+                          Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _updatePlaceholder(key);
+                                },
+                                child: Text(key),
+                              )),
+                      ],
+                    )
+                ],
+              ),
+              const Spacer(),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _confirmGuess(currentLetter);
+                },
+                icon: const Icon(Icons.fort),
+                label: const Text("GO"),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
 
 class GuessedLettersView extends StatelessWidget {
   final List guessedLetters;
-  GuessedLettersView(this.guessedLetters);
+  GuessedLettersView(this.guessedLetters, {super.key});
   //  late int lettersIndex = guessedLetters.length;
 
   @override

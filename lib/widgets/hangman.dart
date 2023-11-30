@@ -98,7 +98,6 @@ class _HangmanState extends State<Hangman> {
       );
     } else {
       // and this is the starting screen
-
       return Scaffold(
         body: Center(
           child: Column(

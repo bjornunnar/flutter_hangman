@@ -4,14 +4,15 @@ import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/hangman.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     themeMode: ThemeMode.system,
-    theme: lightTheme,
-    darkTheme: darkTheme,
+    // theme: lightTheme,
+    // darkTheme: darkTheme,
     home: const Hangman(),
   ));
 }
 
+/*
 var kColorScheme =
     ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 37, 62, 175));
 var kDarkColorScheme = ColorScheme.fromSeed(
@@ -49,3 +50,4 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     foregroundColor: kDarkColorScheme.onPrimaryContainer,
   )),
 );
+*/

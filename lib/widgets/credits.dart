@@ -18,6 +18,7 @@ class _CreditsState extends State<Credits> {
         const Image(
           image: AssetImage("assets/images/tmdb-logo-placeholder.png"),
           width: 300,
+          height: 300,
           color: Color.fromARGB(150, 255, 255, 255),
         ),
         ElevatedButton(

@@ -98,6 +98,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
               "Choose a Title"), // <-- TODO check out checkbox list tile https://api.flutter.dev/flutter/material/CheckboxListTile-class.html
           Expanded(
             child: TextField(
+              
+              autocorrect: false,
               controller: _titleController,
               maxLength: 50,
               decoration: const InputDecoration(

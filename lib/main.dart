@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hangman/data/movie_details.dart';
-import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/hangman.dart';
 
 void main() {

@@ -18,6 +18,7 @@ class Hangman extends StatefulWidget {
 class _HangmanState extends State<Hangman> {
   bool gameOn = false; // game has not started yet
   Widget GameScreenWaiting = Container(); // placeholder value
+
   // setting default settings w/ medium difficulty
   Settings currentSettings = Settings(difficulty: 3);
 
@@ -60,6 +61,7 @@ class _HangmanState extends State<Hangman> {
   }
 
   void _playGame() async {
+    // if user sets a title/word, that's all we need
     if (currentSettings.customTitle != null) {
       Hint currentHint = constructHint(
           customTitle: currentSettings.customTitle,
@@ -68,6 +70,7 @@ class _HangmanState extends State<Hangman> {
         gameOn = true;
         GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
+      // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
       Hint currentHint = constructHint(
           movie: await getMovie(
@@ -77,6 +80,7 @@ class _HangmanState extends State<Hangman> {
         gameOn = true;
         GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
+      // otherwise we just make the call using the current difficulty
     } else {
       Hint currentHint = constructHint(
           movie: await getMovie(difficulty: currentSettings.difficulty));
@@ -97,6 +101,7 @@ class _HangmanState extends State<Hangman> {
         ),
       );
     } else {
+
       // and this is the starting screen
       return Scaffold(
         body: Center(

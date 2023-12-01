@@ -51,10 +51,10 @@ class _KeyboardState extends State<Keyboard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // loop through the keys on the keyboard-list to construct the keyboard
         for (int i = 0; i < qwertyKeyboard.length; i++)
           Row(
             children: [
-              // loop through the keys on the keyboard-list to construct the keyboard
               for (int a = 0; a < qwertyKeyboard[i].length; a++)
                 // if we are on the last key in the list, make a custom "GO" key:
                 (i == 2 && a == qwertyKeyboard[i].length - 1) ?

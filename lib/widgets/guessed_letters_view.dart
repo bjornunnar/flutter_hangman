@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GuessedLettersView extends StatelessWidget {
-  final List guessedLetters;
+  final List<String> guessedLetters;
   const GuessedLettersView(this.guessedLetters, {super.key});
 
   @override

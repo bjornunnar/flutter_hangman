@@ -17,10 +17,10 @@ class Hint {
   Movie? movie;
   int tries;
   String cleanTitle;
-  List cleanTitleAsList;
+  List<String> cleanTitleAsList;
   String hiddenTitle;
-  List hiddenTitleAsList;
-  List guessedLetters;
+  List<String> hiddenTitleAsList;
+  List<String> guessedLetters;
 
   Hint({
     this.movie,

@@ -9,7 +9,7 @@ class CurrentTitle extends StatelessWidget{
   Widget build(context){
     final availableWidth = MediaQuery.of(context).size.width;
     const double padding = 3.0;
-    final letterWidth = (availableWidth-(6*12))/13;
+    final letterWidth = (availableWidth-(padding*2*12))/13;
 
     return Container(
       alignment: Alignment.center,
@@ -43,10 +43,10 @@ class CurrentTitle extends StatelessWidget{
           )
           : 
           Padding(
-            padding: EdgeInsets.all(padding),
+            padding: const EdgeInsets.all(padding),
             child: 
               (letter == " ") ?
-              Container(
+              SizedBox(
                 width: letterWidth,
                 height: letterWidth,)
               :

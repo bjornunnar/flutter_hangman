@@ -41,27 +41,45 @@ class _GameScreenState extends State<GameScreen> {
           // drop number of available tries by 1 and check if game is lost
           weHaveALoser = checkLoser(widget.hint);
           if (weHaveALoser){
-            showDialog(context: context, builder: (BuildContext context){
-              return 
-                widget.hint.movie != null ? LoserScreen(movie: widget.hint.movie)
-                : LoserScreenCustom(customTitle: widget.hint.cleanTitle);
-            });
+            _loserDialog();
           }
         } else {
           // if the guess was correct, check if game is won
           weHaveAWinner = checkWinner(widget.hint);
           if (weHaveAWinner){
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return 
-                widget.hint.movie != null ? WinnerScreen(movie: widget.hint.movie)
-                : WinnerScreenCustom(customTitle: widget.hint.cleanTitle);
-              },
-            );
+            _winnerDialog();
           }
         }
       });
+  }
+
+  void _winnerDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return 
+        widget.hint.movie != null ? WinnerScreen(movie: widget.hint.movie)
+        : WinnerScreenCustom(customTitle: widget.hint.cleanTitle);
+      },
+    );
+  }
+
+  void _loserDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return 
+        widget.hint.movie != null ? LoserScreen(movie: widget.hint.movie)
+        : LoserScreenCustom(customTitle: widget.hint.cleanTitle);
+      },
+    );
+  }
+
+  void _onGiveUp(){
+    setState(() {
+      weHaveALoser = true;
+    });
+    _loserDialog();
   }
 
   void _onQuit() {
@@ -98,8 +116,12 @@ class _GameScreenState extends State<GameScreen> {
             for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
               CurrentTitle(title: fragment as List<String>),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
+                ElevatedButton.icon(
+                    onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
+                    icon: const Icon(Icons.transfer_within_a_station),
+                    label: const Text("Give Up")),
                 ElevatedButton.icon(
                     onPressed: _onQuit,
                     icon: const Icon(Icons.transit_enterexit),

@@ -9,7 +9,7 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
 
   // the list is sorted by most popular, which gives us a sort of difficulty setting.
   // the user can widen the pool of available answers.
-  final int pageNumber = (math.Random().nextInt(difficulty) + 1);
+  final int pageNumber = (math.Random().nextInt(difficulty*2) + 1);
 
   // and if no year is given, we give ourselves a random one
   if (year == 0) {
@@ -20,7 +20,7 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
   // querying https://api.themoviedb.org/3/configuration but this should do.
   // size may be too large,
   // other sizes are: "w92", "w154", "w185", "w342", "w500", "w780", "original"
-  const String posterPath = "http://image.tmdb.org/t/p/w342";
+  const String posterPath = "http://image.tmdb.org/t/p/w185";
 
   Map response = await tmdb.v3.discover.getMovies(
     sortBy: SortMoviesBy.popularityDesc,
@@ -38,7 +38,3 @@ Future<Movie> getMovie({int year = 0, required int difficulty}) async {
 
   return currentMovie;
 }
-
-// we want to have more details on the movie for hints.
-// could create a movie class to return a bit more info
-// note: a single title display was working but when i try to get more values into a movie class, it breaks

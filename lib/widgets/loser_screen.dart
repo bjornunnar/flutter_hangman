@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
 
-class WinnerScreen extends StatelessWidget {
+class LoserScreen extends StatelessWidget {
   Movie? movie;
-  WinnerScreen({super.key, required this.movie});
+  LoserScreen({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: const Icon(Icons.celebration_outlined),
-      title: const Text('You Win!', textAlign: TextAlign.center,),
+      icon: const Icon(Icons.flag_outlined),
+      title: const Text('You Lose', textAlign: TextAlign.center,),
       content: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: double.infinity - 50,maxWidth: double.infinity - 50), // <-- TODO take a better look at this
         child: Column(
           children: [
-            const Text("You correctly guessed the movie:", textAlign: TextAlign.center,),
+            const Text("The movie in question was:", textAlign: TextAlign.center,),
             Text("${movie!.title} (${movie!.releaseYear})",
             textAlign: TextAlign.center,
               style: const TextStyle(

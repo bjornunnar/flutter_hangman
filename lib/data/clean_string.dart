@@ -38,6 +38,7 @@ String convertToEnglish(String input) {
     'Æ': 'AE',
     'æ': 'ae',
     'ß': 'ss',
+    '\'': '‘',
   };
 
   String result = '';

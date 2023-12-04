@@ -7,6 +7,8 @@ import 'package:hangman/data/check_winner.dart';
 import 'package:hangman/data/check_loser.dart';
 import 'package:hangman/widgets/current_title.dart';
 import 'package:hangman/data/split_the_title.dart';
+import 'package:hangman/widgets/loser_screen.dart';
+import 'package:hangman/widgets/loser_screen_custom.dart';
 import 'package:hangman/widgets/winner_screen.dart';
 import 'package:hangman/widgets/winner_screen_custom.dart';
 
@@ -39,7 +41,11 @@ class _GameScreenState extends State<GameScreen> {
           // drop number of available tries by 1 and check if game is lost
           weHaveALoser = checkLoser(widget.hint);
           if (weHaveALoser){
-            // open a pop up dialog or similar with some info
+            showDialog(context: context, builder: (BuildContext context){
+              return 
+                widget.hint.movie != null ? LoserScreen(movie: widget.hint.movie)
+                : LoserScreenCustom(customTitle: widget.hint.cleanTitle);
+            });
           }
         } else {
           // if the guess was correct, check if game is won
@@ -69,38 +75,46 @@ class _GameScreenState extends State<GameScreen> {
     final double availableWidth = MediaQuery.of(context).size.width;
 
     return Center(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              // these height and width settings don't make sense
-              Container(
-                width: availableWidth * 0.65,
-                height: 300,
-                color: Colors.blue,
-              ),
-              Container(
-                  height: availableWidth * 0.3,
-                  width: 300,
-                  child: GuessedLettersView(widget.hint.guessedLetters)
-              ),
-            ],
-          ),
-          Text(widget.hint.cleanTitle),
-          for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
-            CurrentTitle(title: fragment as List<String>),
-          ElevatedButton.icon(
-              onPressed: _onQuit,
-              icon: const Icon(Icons.transit_enterexit),
-              label: const Text("Quit")),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Keyboard(confirmGuess: confirmGuess),
-            ],
-          )
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 200,
+                  height: 300,
+                  color: Colors.blue,
+                ),
+                Container(
+                  width: 200,
+                  height: 300,
+                    child: GuessedLettersView(widget.hint.guessedLetters)
+                ),
+              ],
+            ),
+            Text(widget.hint.cleanTitle),
+            for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
+              CurrentTitle(title: fragment as List<String>),
+            Row(
+              children: [
+                Spacer(),
+                ElevatedButton.icon(
+                    onPressed: _onQuit,
+                    icon: const Icon(Icons.transit_enterexit),
+                    label: const Text("Quit")),
+              ],
+            ),
+      
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Keyboard(confirmGuess: confirmGuess),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

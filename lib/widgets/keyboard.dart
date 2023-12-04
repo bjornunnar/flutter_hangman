@@ -49,7 +49,12 @@ class _KeyboardState extends State<Keyboard> {
 
   @override
   Widget build(BuildContext context) {
+    final availableWidth = MediaQuery.of(context).size.width;
+    const double padding = 3.0;
+    final keyWidth = (availableWidth-(padding*2*10))/11;
+    final keyHeight = keyWidth;
     return Column(
+      
       children: [
         // loop through the keys on the keyboard-list to construct the keyboard
         for (int i = 0; i < qwertyKeyboard.length; i++)
@@ -59,10 +64,10 @@ class _KeyboardState extends State<Keyboard> {
                 // if we are on the last key in the list, make a custom "GO" key:
                 (i == 2 && a == qwertyKeyboard[i].length - 1) ?
                 Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(padding),
                     child: SizedBox(
-                      width: 40,
-                      height: 20,
+                      width: keyWidth*2,
+                      height: keyHeight,
                       child: 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -84,10 +89,10 @@ class _KeyboardState extends State<Keyboard> {
                       // .. otherwise, make a regular letter key.
                       :
                     Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(padding),
                     child: SizedBox(
-                      width: 20,
-                      height: 20,
+                      width: keyWidth,
+                      height: keyHeight,
                       child: KeyboardButton(
                         index: qwertyKeyboard[i][a],
                         isActive: activeButtonIndex == qwertyKeyboard[i][a],

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class WinnerScreenCustom extends StatelessWidget {
+class LoserScreenCustom extends StatelessWidget {
   String customTitle;
-  WinnerScreenCustom({super.key, required this.customTitle});
+  LoserScreenCustom({super.key, required this.customTitle});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-       icon: const Icon(Icons.celebration_outlined),
-      title: const Text('You Win!', textAlign: TextAlign.center,),
+       icon: const Icon(Icons.flag_outlined),
+      title: const Text('You Lose', textAlign: TextAlign.center,),
       content: Column(
         children: [
-          const Text("You correctly guessed the movie:", textAlign: TextAlign.center,),
+          const Text("The movie in question was:", textAlign: TextAlign.center,),
           Text(customTitle,
           textAlign: TextAlign.center,
           style: const TextStyle(

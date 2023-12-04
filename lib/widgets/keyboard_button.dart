@@ -50,9 +50,12 @@ class _KeyboardButtonState extends State<KeyboardButton> {
       onPressed: () {
         _onButtonPress();        
       },
-      child: Text(
-        widget.keyboardKey,
-        style: const TextStyle(fontSize: 8,),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Text(
+          widget.keyboardKey,
+          style: const TextStyle(fontSize: 16),
+        ),
       ),
     );
   }

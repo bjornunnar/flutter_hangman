@@ -6,6 +6,9 @@ import 'package:hangman/data/check_guess.dart';
 import 'package:hangman/data/check_winner.dart';
 import 'package:hangman/data/check_loser.dart';
 import 'package:hangman/widgets/current_title.dart';
+import 'package:hangman/data/split_the_title.dart';
+import 'package:hangman/widgets/winner_screen.dart';
+import 'package:hangman/widgets/winner_screen_custom.dart';
 
 
 class GameScreen extends StatefulWidget {
@@ -29,11 +32,8 @@ class _GameScreenState extends State<GameScreen> {
         // the same list after we run through and replace
         // there should be a better way to do this..?
         int beforeGuessIsChecked = widget.hint.guessedLetters.length;
-        print(beforeGuessIsChecked);
         // compare the guess with the current word, return new hint object
         widget.hint = checkGuess(letter: letter, hint: widget.hint);
-        print(widget.hint.hiddenTitleAsList);
-        print(widget.hint.guessedLetters);
 
         if (beforeGuessIsChecked != widget.hint.guessedLetters.length){
           // drop number of available tries by 1 and check if game is lost
@@ -45,7 +45,14 @@ class _GameScreenState extends State<GameScreen> {
           // if the guess was correct, check if game is won
           weHaveAWinner = checkWinner(widget.hint);
           if (weHaveAWinner){
-            // open a pop up dialog or similar with some info
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return 
+                widget.hint.movie != null ? WinnerScreen(movie: widget.hint.movie)
+                : WinnerScreenCustom(customTitle: widget.hint.cleanTitle);
+              },
+            );
           }
         }
       });
@@ -75,11 +82,13 @@ class _GameScreenState extends State<GameScreen> {
               Container(
                   height: availableWidth * 0.3,
                   width: 300,
-                  child: GuessedLettersView(widget.hint.guessedLetters)),
+                  child: GuessedLettersView(widget.hint.guessedLetters)
+              ),
             ],
           ),
           Text(widget.hint.cleanTitle),
-          CurrentTitle(title: widget.hint.hiddenTitleAsList),
+          for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
+            CurrentTitle(title: fragment as List<String>),
           ElevatedButton.icon(
               onPressed: _onQuit,
               icon: const Icon(Icons.transit_enterexit),

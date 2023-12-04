@@ -6,7 +6,6 @@ Hint checkGuess({required String letter, required Hint hint}){
     if (letter == hint.cleanTitleAsList[i]) {
       hint.hiddenTitleAsList[i] = letter;
       correctGuess = true;
-      print("guess is correct");
     }
   }
   if (!correctGuess){

@@ -1,35 +1,24 @@
-  List splitTheTitle({required List wholeTitle, required int maxlength}){
-    List fixedTitle = [];
-    while (wholeTitle.length > maxlength){
-      int breakpoint = findBreakPoints(wholeTitle, maxlength);
-      fixedTitle.add(wholeTitle.getRange(0, breakpoint));
-      wholeTitle.removeRange(0, breakpoint);
-    }
-    if (fixedTitle.isNotEmpty){
-      print("fixedtitle is not empty");
-      fixedTitle.add(wholeTitle);
-      return fixedTitle;
-    }
-    return wholeTitle;
-  }
+  List<List<String>> splitTheTitle({required List<String> wholeTitle, required int maxlength}){
+    // if the whole thing is less than maxlength, we just wrap it in another list and return
+    // we need it to be a list of lists since we plan to iterate on titles
+    // less than max and more than max in the same way
+    if (wholeTitle.length < maxlength){return [wholeTitle];} 
 
-  void main(){
-    String title = "Once upon a time in Hollywood";
-    List titleList = title.split("");
-    print(titleList);
-    titleList = splitTheTitle(wholeTitle: titleList, maxlength: 12);
-    print(titleList);
-  }
+    List<String> titleWordForWord = wholeTitle.join().split(" ");
+    List<List<String>> fixedTitle = [];
+    String titleFragment = titleWordForWord[0].toString();
 
-  int findBreakPoints(List wholeTitle, int maxlength){
-    if (wholeTitle.length > maxlength){
-      for (int i = maxlength; i > 0; i--){
-        if (wholeTitle[i] == " "){
-          return i;
-        }
+    // run through the fragmented list, see if the two current words are more than the max,
+    // if so, keep the current string and start a new one with the current word
+    for (int i = 1; i < titleWordForWord.length; i++){
+      if (titleFragment.length + titleWordForWord[i].length < maxlength){
+        titleFragment = "$titleFragment ${titleWordForWord[i]}";
+      } else {
+        fixedTitle.add(titleFragment.split(""));
+        titleFragment = titleWordForWord[i];
       }
     }
-    return maxlength;
+    // and then add the remaining string
+    fixedTitle.add(titleFragment.split(""));
+    return fixedTitle;
   }
-
-  // TODO -- NOT WORKING YET!!!

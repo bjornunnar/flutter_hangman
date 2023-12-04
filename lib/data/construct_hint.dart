@@ -10,12 +10,9 @@ Hint constructHint({Movie? movie, String? customTitle, int? customYear, int diff
   if (customTitle != null){
     String customTitleToString = customTitle.toString();
     cleanTitle = convertToEnglish(customTitleToString).toUpperCase();
-    print("printing clean title 1 $cleanTitle");
   } else {
     cleanTitle = convertToEnglish(movie!.title).toUpperCase();
-    print("printing clean title 2 $cleanTitle");
   }
-  print("printing clean title 3: $cleanTitle");
   
   String hiddenTitle = cleanTitle.replaceAll(RegExp(r'[a-zA-Z]'), "_");
   List<String> cleanTitleAsList = cleanTitle.split("");

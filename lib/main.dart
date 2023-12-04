@@ -6,7 +6,7 @@ void main() {
     themeMode: ThemeMode.system,
     // theme: lightTheme,
     // darkTheme: darkTheme,
-    home: const Hangman(),
+    home: Hangman(),
   ));
 }
 

@@ -17,7 +17,7 @@ class Hangman extends StatefulWidget {
 
 class _HangmanState extends State<Hangman> {
   bool gameOn = false; // game has not started yet
-  Widget GameScreenWaiting = Container(); // placeholder value
+  Widget gameScreenWaiting = Container(); // placeholder value
 
   // setting default settings w/ medium difficulty
   Settings currentSettings = Settings(difficulty: 3);
@@ -68,7 +68,7 @@ class _HangmanState extends State<Hangman> {
           difficulty: currentSettings.difficulty);
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
       // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
@@ -78,7 +78,7 @@ class _HangmanState extends State<Hangman> {
               year: currentSettings.customYear!));
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
       // otherwise we just make the call using the current difficulty
     } else {
@@ -86,7 +86,7 @@ class _HangmanState extends State<Hangman> {
           movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
         gameOn = true;
-        GameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
       });
     }
   }
@@ -97,7 +97,7 @@ class _HangmanState extends State<Hangman> {
     if (gameOn) {
       return Scaffold(
         body: Center(
-          child: GameScreenWaiting,
+          child: gameScreenWaiting,
         ),
       );
     } else {

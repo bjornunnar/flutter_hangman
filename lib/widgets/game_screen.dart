@@ -91,6 +91,9 @@ class _GameScreenState extends State<GameScreen> {
     // not sure if this is needed, current implementation is off
     final double availableHeight = MediaQuery.of(context).size.height;
     final double availableWidth = MediaQuery.of(context).size.width;
+    int hangmanImageNumber;
+    widget.hint.tries >= 6 ? hangmanImageNumber = 6 : hangmanImageNumber = widget.hint.tries;
+    if (weHaveALoser){hangmanImageNumber = 0;}
 
     return Center(
       child: Padding(
@@ -101,9 +104,9 @@ class _GameScreenState extends State<GameScreen> {
             Row(
               children: [
                 Container(
-                  width: 200,
+                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/hangman0$hangmanImageNumber.png"))),
+                  width: 300,
                   height: 300,
-                  color: Colors.blue,
                 ),
                 Container(
                   width: 200,

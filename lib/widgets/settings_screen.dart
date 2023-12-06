@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
-import 'package:hangman/widgets/custom_title_input.dart';
-import 'package:hangman/widgets/custom_year_input.dart';
+// import 'package:hangman/widgets/custom_title_input.dart';
+// import 'package:hangman/widgets/custom_year_input.dart';
 
 class SettingsOverlay extends StatefulWidget {
   SettingsOverlay(
@@ -18,8 +18,8 @@ class SettingsOverlay extends StatefulWidget {
 }
 
 class _SettingsOverlayState extends State<SettingsOverlay> {
-  bool customYearEnabled = false;
-  bool customTitleEnabled = false;
+  bool titleIsChecked = false;
+  bool yearIsChecked = false;
   final _titleController = TextEditingController();
   final _yearController = TextEditingController();
   late double sliderDifficultySetting =
@@ -43,12 +43,18 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
   void enableCustomYear(){
     setState(() {
-      customYearEnabled = !customYearEnabled;
+      yearIsChecked = !yearIsChecked;
+      if (yearIsChecked) {titleIsChecked = false;}
+      _titleController.text = "";
+      print("enabling custom year");
+      
     });
   }
   void enableCustomTitle(){
     setState(() {
-      customTitleEnabled = !customTitleEnabled;
+      titleIsChecked = !titleIsChecked;
+      if (titleIsChecked){yearIsChecked = false;}
+      _yearController.text = "";
       print("enabling custom title");
     });
   }
@@ -99,44 +105,91 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   Widget build(context) {
 
     final double availableWidth = MediaQuery.of(context).size.width;
+    Map<int, String> difficultyLabels = {1: "Easy", 2: "Fine", 3: "Mid", 4: "Hard", 5: "OMG"};
+    const textHeaders = TextStyle(fontSize: 18,fontWeight: FontWeight.bold,);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Text("Difficulty"),
+          const Text("Difficulty",
+          style: textHeaders),
           Slider(
               value: sliderDifficultySetting,
-              label: sliderDifficultySetting.round().toString(),
+              label: difficultyLabels[sliderDifficultySetting],
               min: 1,
               max: 5,
               divisions: 4,
               onChanged: (double newValue) {
                 sliderUpdate(newValue);
               }),
-          Text("Choose a Title"), 
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              for (int i = 1; i <= 5; i++)
+                Text(
+                  '${difficultyLabels[i]}', // Display the numbers from 1 to 5 as labels
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: sliderDifficultySetting == i.toDouble()
+                        ? Colors.blue // Highlight the selected value
+                        : Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          const SizedBox(height: 50,),
+          const Text("The options below are.. optional."),
+          const Text("You can give me a title of your choice to play the game with, and then I won't go to the trouble of finding one for you to guess."),
+          const Text("Or you can give me a specific year, and I'll try my best to find a movie from that year, for us to play with."),
+          const Text("Note that you can only have one or the other!", style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 30),
+          const Text("Choose a Title",
+          style: textHeaders,), 
           Row(
               children: [
-                CustomTitleSetting(enableCustomTitle: enableCustomTitle,), // TODO -- CHECKBOXES NOT YET WORKING
+                Checkbox(
+                  value: titleIsChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null && value){
+                        enableCustomTitle();
+                      }
+                    });
+                  },
+                ),
                 Expanded(
                   child: TextField(
-                    enabled: customTitleEnabled,
+                    minLines: 2,
+                    maxLines: 2,
+                    enabled: titleIsChecked,
                     autocorrect: false,
                     controller: _titleController,
-                    maxLength: 50,
+                    maxLength: 90,
                     decoration: const InputDecoration(
                         label: Text("Input your own movie title to play with.")),
                   ),
                 ),
               ],
             ),
-          Text("Pick the Year"),
+            const SizedBox(height: 50),
+          const Text("Pick the Year",
+          style: textHeaders),
           Row(
             children: [
-              CustomYearSetting(enableCustomYear: enableCustomYear),
+              Checkbox(
+                  value: yearIsChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null && value){
+                      enableCustomYear();
+                      }
+                    });
+                  },
+                ),
               Expanded(
                 child: TextField(
-                enabled: customYearEnabled,
+                enabled: yearIsChecked,
                 keyboardType: TextInputType.number,
                 controller: _yearController,
                 maxLength: 4,
@@ -148,18 +201,17 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Spacer(),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(
                         context); // closes the overlay by 'popping' the context given to the current build method
                   },
                   child: const Text("Nevermind")),
-              const Spacer(),
               ElevatedButton(
                   onPressed: _onSaveSettings,
-                  child: const Text("Save Custom Settings")),
+                  child: const Text("Save Settings")),
             ],
           )
         ],

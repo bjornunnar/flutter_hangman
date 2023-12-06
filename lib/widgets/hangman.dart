@@ -53,7 +53,7 @@ class _HangmanState extends State<Hangman> {
     showModalBottomSheet(
         useSafeArea:
             true, // makes sure that the overlay does not overlap with camera lens etc.
-        isScrollControlled: false,
+        isScrollControlled: true,
         context: context,
         // builder takes the current settings object, and the updateSettings function
         builder: (ctx) => SettingsOverlay(
@@ -107,11 +107,14 @@ class _HangmanState extends State<Hangman> {
         body: Center(
           child: Column(
             children: [
-              TextButton(
-                  onPressed: _openSettings, child: const Text("Settings")),
+              const Text("The Hanged Man",style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text("(who only knew movie titles)",style: TextStyle(color: Colors.grey),),
               Text("${currentSettings.difficulty}"),
               Text("${currentSettings.customTitle}"),
               Text("${currentSettings.customYear}"),
+              TextButton(
+                  onPressed: _openSettings, child: const Text("Settings")),
+              
               TextButton(onPressed: _playGame, child: const Text("Play!")),
               TextButton(
                 onPressed: _openCredits,

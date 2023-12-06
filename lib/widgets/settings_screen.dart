@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
+import 'package:hangman/widgets/custom_title_input.dart';
+import 'package:hangman/widgets/custom_year_input.dart';
 
 class SettingsOverlay extends StatefulWidget {
   SettingsOverlay(
@@ -16,6 +18,8 @@ class SettingsOverlay extends StatefulWidget {
 }
 
 class _SettingsOverlayState extends State<SettingsOverlay> {
+  bool customYearEnabled = false;
+  bool customTitleEnabled = false;
   final _titleController = TextEditingController();
   final _yearController = TextEditingController();
   late double sliderDifficultySetting =
@@ -34,6 +38,18 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   void sliderUpdate(double value) {
     setState(() {
       sliderDifficultySetting = value;
+    });
+  }
+
+  void enableCustomYear(){
+    setState(() {
+      customYearEnabled = !customYearEnabled;
+    });
+  }
+  void enableCustomTitle(){
+    setState(() {
+      customTitleEnabled = !customTitleEnabled;
+      print("enabling custom title");
     });
   }
 
@@ -63,23 +79,27 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
   void _showDialog() {
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: const Text("Quick, what year is it?!"),
-              content: const Text(
-                  "The chosen year must be between 1920 and 2023. I make the rules."),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                    },
-                    child: const Text("FINE"))
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Quick, what year is it?!"),
+        content: const Text(
+          "The chosen year must be between 1920 and 2023. I make the rules."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+            },
+            child: const Text("FINE"))
+          ],
+        )
+    );
   }
 
   @override
   Widget build(context) {
+
+    final double availableWidth = MediaQuery.of(context).size.width;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -94,28 +114,38 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
               onChanged: (double newValue) {
                 sliderUpdate(newValue);
               }),
-          Text(
-              "Choose a Title"), // <-- TODO check out checkbox list tile https://api.flutter.dev/flutter/material/CheckboxListTile-class.html
-          Expanded(
-            child: TextField(
-              
-              autocorrect: false,
-              controller: _titleController,
-              maxLength: 50,
-              decoration: const InputDecoration(
-                  label: Text("Input your own movie title to play with.")),
+          Text("Choose a Title"), 
+          Row(
+              children: [
+                CustomTitleSetting(enableCustomTitle: enableCustomTitle,), // TODO -- CHECKBOXES NOT YET WORKING
+                Expanded(
+                  child: TextField(
+                    enabled: customTitleEnabled,
+                    autocorrect: false,
+                    controller: _titleController,
+                    maxLength: 50,
+                    decoration: const InputDecoration(
+                        label: Text("Input your own movie title to play with.")),
+                  ),
+                ),
+              ],
             ),
-          ),
           Text("Pick the Year"),
-          Expanded(
-            child: TextField(
-              keyboardType: TextInputType.number,
-              controller: _yearController,
-              maxLength: 4,
-              decoration: const InputDecoration(
-                  label: Text(
-                      "Get a movie from a year of your choice. Pick a number from 1920-2023.")),
-            ),
+          Row(
+            children: [
+              CustomYearSetting(enableCustomYear: enableCustomYear),
+              Expanded(
+                child: TextField(
+                enabled: customYearEnabled,
+                keyboardType: TextInputType.number,
+                controller: _yearController,
+                maxLength: 4,
+                decoration: const InputDecoration(
+                    label: Text(
+                        "Get a movie from a year of your choice. Pick a number from 1920-2023.")),
+                          ),
+              ),
+            ],
           ),
           Row(
             children: [

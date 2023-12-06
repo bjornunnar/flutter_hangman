@@ -23,6 +23,13 @@ flutter:
   uses-material-design: true
   assets:
   - assets/images/tmdb-logo-placeholder.png
+  - assets/images/hangman00.png
+  - assets/images/hangman01.png
+  - assets/images/hangman02.png
+  - assets/images/hangman03.png
+  - assets/images/hangman04.png
+  - assets/images/hangman05.png
+  - assets/images/hangman06.png
   fonts:
   - family: Lato
     fonts:

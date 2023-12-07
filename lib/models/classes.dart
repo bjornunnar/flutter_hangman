@@ -42,4 +42,33 @@ class Settings{
     this.customYear,
     this.customTitle,
   });
+  
+  Map<int, String> labels = 
+    {
+      1: "Easy", 
+      2: "Fine", 
+      3: "Mid", 
+      4: "Hard", 
+      5: "OMG"
+    };
+  Map<int,String> get difficultyLabels{
+    return labels;
+  }
+  
+}
+
+class ResponsiveSizes{
+  double availableWidth;
+  double padding;
+  int numberOfLetters;
+
+  ResponsiveSizes({
+    required this.availableWidth,
+    required this.padding,
+    required this.numberOfLetters,
+  });
+
+  double get letterWidth{
+    return (availableWidth-(padding*2*numberOfLetters))/(numberOfLetters+1.4);
+  }
 }

@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/models/classes.dart';
 
 class CurrentTitle extends StatelessWidget{
   final List<String> title;
-  const CurrentTitle({super.key, required this.title});
+  final ResponsiveSizes titleLetterWidth;
+  const CurrentTitle({
+    super.key, 
+    required this.title, 
+    required this.titleLetterWidth
+    });
 
 
   @override
   Widget build(context){
-    final availableWidth = MediaQuery.of(context).size.width;
-    const double padding = 3.0;
-    final letterWidth = (availableWidth-(padding*2*12))/13;
 
-    return Container(
-      alignment: Alignment.center,
-      child: Row(
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (String letter in title)
           (letter != "_" && letter != " ") 
           ?  
           Padding(
-            padding: const EdgeInsets.all(padding),
+            padding: EdgeInsets.all(titleLetterWidth.padding),
               child: Container(
-                width: letterWidth,
-                height: letterWidth,
+                width: titleLetterWidth.letterWidth,
+                height: titleLetterWidth.letterWidth,
                 decoration: const BoxDecoration(
                   boxShadow: [BoxShadow(color: Colors.blueAccent, blurRadius: 1, offset: Offset(1, 1))],
                   borderRadius: BorderRadius.all(Radius.elliptical(5, 5)),
@@ -43,16 +45,16 @@ class CurrentTitle extends StatelessWidget{
           )
           : 
           Padding(
-            padding: const EdgeInsets.all(padding),
+            padding: EdgeInsets.all(titleLetterWidth.padding),
             child: 
               (letter == " ") ?
               SizedBox(
-                width: letterWidth,
-                height: letterWidth,)
+                width: titleLetterWidth.letterWidth,
+                height: titleLetterWidth.letterWidth,)
               :
               Container(
-                width: letterWidth,
-                height: letterWidth,
+                width: titleLetterWidth.letterWidth,
+                height: titleLetterWidth.letterWidth,
                 decoration: const BoxDecoration(
                   boxShadow: [BoxShadow(color: Colors.blueAccent, blurRadius: 1, offset: Offset(1, 1))],
                   borderRadius: BorderRadius.all(Radius.elliptical(5, 5)),
@@ -62,7 +64,6 @@ class CurrentTitle extends StatelessWidget{
           
     
         ],
-      ),
     );
   }
 }

@@ -88,54 +88,71 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(context) {
-    // not sure if this is needed, current implementation is off
-    final double availableHeight = MediaQuery.of(context).size.height;
-    final double availableWidth = MediaQuery.of(context).size.width;
+    // how many letters we want to display on a single line.
+    // this gets passed to the responsive layout as well as  the title display 
+    int maxLength = 12;
+    double gameScreenWidth = MediaQuery.of(context).size.width;
+    ResponsiveSizes titleLetterWidth = ResponsiveSizes(availableWidth: gameScreenWidth, padding: 3, numberOfLetters: maxLength);
+    double guessedLettersViewWidth = ((titleLetterWidth.letterWidth)*3)+(titleLetterWidth.padding*8);
+
+    // roll through the hangman images based on number of guesses left
+    // we only have 6 images so easy mode shows the first image for a few turns
     int hangmanImageNumber;
     widget.hint.tries >= 6 ? hangmanImageNumber = 6 : hangmanImageNumber = widget.hint.tries;
     if (weHaveALoser){hangmanImageNumber = 0;}
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Row(
               children: [
                 Container(
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/hangman0$hangmanImageNumber.png"))),
-                  width: 300,
-                  height: 300,
+
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/hangman0$hangmanImageNumber.png")
+                    )
+                  ),
+                  width: 170,
+                  height: 200,
                 ),
+                const Spacer(),
                 Container(
-                  width: 200,
-                  height: 300,
-                    child: GuessedLettersView(widget.hint.guessedLetters)
+                  width: guessedLettersViewWidth,
+                  height: 200,
+                  child: 
+                    GuessedLettersView(
+                      guessedLetters: widget.hint.guessedLetters, 
+                      titleLetterWidth: titleLetterWidth,
+                    ),
                 ),
               ],
             ),
-            Text(widget.hint.cleanTitle),
             for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
-              CurrentTitle(title: fragment as List<String>),
+              CurrentTitle(title: fragment as List<String>, titleLetterWidth: titleLetterWidth,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                    onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
-                    icon: const Icon(Icons.transfer_within_a_station),
-                    label: const Text("Give Up")),
+                  onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
+                  icon: const Icon(Icons.transfer_within_a_station),
+                  label: const Text("Give Up")),
                 ElevatedButton.icon(
-                    onPressed: _onQuit,
-                    icon: const Icon(Icons.transit_enterexit),
-                    label: const Text("Quit")),
+                  onPressed: _onQuit,
+                  icon: const Icon(Icons.transit_enterexit),
+                  label: const Text("Quit")),
               ],
             ),
       
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Keyboard(confirmGuess: confirmGuess),
+                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth,),
               ],
             )
           ],

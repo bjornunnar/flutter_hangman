@@ -4,7 +4,7 @@ import 'package:hangman/models/classes.dart';
 // import 'package:hangman/widgets/custom_year_input.dart';
 
 class SettingsOverlay extends StatefulWidget {
-  SettingsOverlay(
+  const SettingsOverlay(
       {super.key, required this.currentSettings, required this.updateSettings});
 
   // callback function to update current settings when the overlay is "saved"
@@ -20,8 +20,15 @@ class SettingsOverlay extends StatefulWidget {
 class _SettingsOverlayState extends State<SettingsOverlay> {
   bool titleIsChecked = false;
   bool yearIsChecked = false;
-  final _titleController = TextEditingController();
-  final _yearController = TextEditingController();
+  // previously saved title or year is set again:
+  late final _titleController = TextEditingController(
+    text: widget.currentSettings.customTitle
+    );
+  late final _yearController = TextEditingController(text: 
+    widget.currentSettings.customYear != null 
+    ? widget.currentSettings.customYear.toString()
+    : "",
+    );
   late double sliderDifficultySetting =
       (widget.currentSettings.difficulty).toDouble();
 
@@ -104,19 +111,24 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   @override
   Widget build(context) {
 
-    final double availableWidth = MediaQuery.of(context).size.width;
-    Map<int, String> difficultyLabels = {1: "Easy", 2: "Fine", 3: "Mid", 4: "Hard", 5: "OMG"};
+    // get the text labels for the difficulty settings, and set style for headers
+    List difficultyLabelsList = widget.currentSettings.labels.values.toList();
     const textHeaders = TextStyle(fontSize: 18,fontWeight: FontWeight.bold,);
 
+    // checking if user already saved custom settings, and enabling those already
+    if (widget.currentSettings.customTitle != null){titleIsChecked = true;}
+    if (widget.currentSettings.customYear != null){yearIsChecked = true;}
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(30.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Text("Difficulty",
-          style: textHeaders),
+            style: textHeaders),
           Slider(
               value: sliderDifficultySetting,
-              label: difficultyLabels[sliderDifficultySetting],
+              label: widget.currentSettings.labels[sliderDifficultySetting],
               min: 1,
               max: 5,
               divisions: 4,
@@ -128,7 +140,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
             children: [
               for (int i = 1; i <= 5; i++)
                 Text(
-                  '${difficultyLabels[i]}', // Display the numbers from 1 to 5 as labels
+                  '${difficultyLabelsList[i-1]}', // Display the difficulty settings
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: sliderDifficultySetting == i.toDouble()
@@ -140,16 +152,15 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
             ),
           const SizedBox(height: 50,),
           const Text("The options below are.. optional."),
-          const Text("You can give me a title of your choice to play the game with, and then I won't go to the trouble of finding one for you to guess."),
-          const Text("Or you can give me a specific year, and I'll try my best to find a movie from that year, for us to play with."),
+          const Text("You can choose a title to play with, or the movie release year you would like to play."),
           const Text("Note that you can only have one or the other!", style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 30),
-          const Text("Choose a Title",
+          const Text("Pick the Title",
           style: textHeaders,), 
           Row(
               children: [
                 Checkbox(
-                  value: titleIsChecked,
+                  value: (titleIsChecked),
                   onChanged: (bool? value) {
                     setState(() {
                       if (value != null && value){
@@ -160,14 +171,12 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                 ),
                 Expanded(
                   child: TextField(
-                    minLines: 2,
-                    maxLines: 2,
                     enabled: titleIsChecked,
                     autocorrect: false,
                     controller: _titleController,
-                    maxLength: 90,
+                    maxLength: 40,
                     decoration: const InputDecoration(
-                        label: Text("Input your own movie title to play with.")),
+                        label: Text("..and write it down")),
                   ),
                 ),
               ],
@@ -189,14 +198,15 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                 ),
               Expanded(
                 child: TextField(
-                enabled: yearIsChecked,
-                keyboardType: TextInputType.number,
-                controller: _yearController,
-                maxLength: 4,
-                decoration: const InputDecoration(
-                    label: Text(
-                        "Get a movie from a year of your choice. Pick a number from 1920-2023.")),
-                          ),
+                  enabled: yearIsChecked,
+                  keyboardType: TextInputType.number,
+                  controller: _yearController,
+                  maxLength: 4,
+                  decoration: const InputDecoration(
+                      label: Text(
+                          "(Must be between 1920 and 2023)")
+                  ),
+                ),
               ),
             ],
           ),

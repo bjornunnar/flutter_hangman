@@ -22,6 +22,10 @@ class _HangmanState extends State<Hangman> {
   // setting default settings w/ medium difficulty
   Settings currentSettings = Settings(difficulty: 3);
 
+  // displays custom title and/or year if user chooses
+  bool displayCustomTitle = false;
+  bool displayCustomYear = false;
+
   // quit function to be passed to GameScreen
   void quitGame() {
     setState(() {
@@ -73,9 +77,10 @@ class _HangmanState extends State<Hangman> {
       // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
       Hint currentHint = constructHint(
-          movie: await getMovie(
-              difficulty: currentSettings.difficulty,
-              year: currentSettings.customYear!));
+        difficulty: currentSettings.difficulty,
+        movie: await getMovie(
+            difficulty: currentSettings.difficulty,
+            year: currentSettings.customYear!));
       setState(() {
         gameOn = true;
         gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
@@ -83,7 +88,8 @@ class _HangmanState extends State<Hangman> {
       // otherwise we just make the call using the current difficulty
     } else {
       Hint currentHint = constructHint(
-          movie: await getMovie(difficulty: currentSettings.difficulty));
+        difficulty: currentSettings.difficulty,
+        movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
         gameOn = true;
         gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
@@ -106,12 +112,34 @@ class _HangmanState extends State<Hangman> {
       return Scaffold(
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("The Hanged Man",style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const Text("(who only knew movie titles)",style: TextStyle(color: Colors.grey),),
-              Text("${currentSettings.difficulty}"),
-              Text("${currentSettings.customTitle}"),
-              Text("${currentSettings.customYear}"),
+              Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
+              currentSettings.customTitle != null
+              ? GestureDetector(
+                onTap:() {
+                  setState(() {
+                    displayCustomTitle = !displayCustomTitle;
+                  });
+                },
+                child: const Text("Playing with Custom Title.\nPress here to show on screen.")
+                )
+              : const Text("Playing with a Random Movie Title"),
+              if (displayCustomTitle && currentSettings.customTitle != null) Text(currentSettings.customTitle!),
+              currentSettings.customYear != null
+              ? GestureDetector(
+                onTap:() {
+                  setState(() {
+                    displayCustomYear = !displayCustomYear;
+                  });
+                },
+                child: const Text("Playing with a set Custom Year.\nPress here to show on screen.")
+                )
+              : const Text("Playing with a Random Release Year"),
+              if (displayCustomYear && currentSettings.customYear != null) Text(currentSettings.customYear!.toString()),
+              
               TextButton(
                   onPressed: _openSettings, child: const Text("Settings")),
               

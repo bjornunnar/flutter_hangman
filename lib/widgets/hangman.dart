@@ -99,6 +99,9 @@ class _HangmanState extends State<Hangman> {
 
   @override
   Widget build(BuildContext context) {
+
+    final double availableWidth = MediaQuery.of(context).size.width;
+
     // this only gets called when user clicks PLAY
     if (gameOn) {
       return Scaffold(
@@ -116,7 +119,20 @@ class _HangmanState extends State<Hangman> {
             children: [
               const Text("The Hanged Man",style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const Text("(who only knew movie titles)",style: TextStyle(color: Colors.grey),),
+              Image.asset("assets/images/hangman-light-trans.png",
+                height: availableWidth > 500 ? 410 : availableWidth*0.8),
+              
+              SizedBox(width: availableWidth*0.8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                  onPressed: _openSettings, child: const Text("Settings")),
+              ElevatedButton(onPressed: _playGame, child: const Text("Play!")),
+              ],)),
+              SizedBox(height: 5),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
+              SizedBox(height: 5),
               currentSettings.customTitle != null
               ? GestureDetector(
                 onTap:() {
@@ -124,10 +140,14 @@ class _HangmanState extends State<Hangman> {
                     displayCustomTitle = !displayCustomTitle;
                   });
                 },
-                child: const Text("Playing with Custom Title.\nPress here to show on screen.")
+                child: const Text("Custom Title is set.\nPress here to show the title on screen.")
                 )
               : const Text("Playing with a Random Movie Title"),
-              if (displayCustomTitle && currentSettings.customTitle != null) Text(currentSettings.customTitle!),
+              SizedBox(height: 5),
+              // show custom title if user chooses. Else empty string, to keep layout steady.
+              (displayCustomTitle && currentSettings.customTitle != null)
+              ? Text("${currentSettings.customTitle!}") 
+              : Text(""),
               currentSettings.customYear != null
               ? GestureDetector(
                 onTap:() {
@@ -138,16 +158,22 @@ class _HangmanState extends State<Hangman> {
                 child: const Text("Playing with a set Custom Year.\nPress here to show on screen.")
                 )
               : const Text("Playing with a Random Release Year"),
-              if (displayCustomYear && currentSettings.customYear != null) Text(currentSettings.customYear!.toString()),
+              (displayCustomYear && currentSettings.customYear != null) 
+              ? Text(currentSettings.customYear!.toString())
+              : Text(""),
               
-              TextButton(
-                  onPressed: _openSettings, child: const Text("Settings")),
-              
-              TextButton(onPressed: _playGame, child: const Text("Play!")),
-              TextButton(
-                onPressed: _openCredits,
-                child: const Text("Credits"),
+              SizedBox(width: availableWidth*0.8,
+              child:Row(
+                children: [
+                  Spacer(),
+                  TextButton(
+                    onPressed: _openCredits,
+                    child: const Text("Credits"),
+                  ),
+              ],)
               ),
+              
+              
             ],
           ),
         ),

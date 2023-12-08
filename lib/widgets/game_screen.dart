@@ -16,7 +16,11 @@ import 'package:hangman/widgets/winner_screen_custom.dart';
 class GameScreen extends StatefulWidget {
   Hint hint;
   final Function quitGame;
-  GameScreen({super.key, required this.hint, required this.quitGame});
+  GameScreen({
+    super.key, 
+    required this.hint, 
+    required this.quitGame
+    });
 
   @override
   State<GameScreen> createState() {

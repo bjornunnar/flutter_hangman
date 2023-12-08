@@ -18,14 +18,16 @@ class SettingsOverlay extends StatefulWidget {
 }
 
 class _SettingsOverlayState extends State<SettingsOverlay> {
+  // both custom settings are disabled by default
   bool titleIsChecked = false;
   bool yearIsChecked = false;
   // previously saved title or year is set again:
   late final _titleController = TextEditingController(
-    text: widget.currentSettings.customTitle
+    text: widget.currentSettings.customTitle 
+    ?? widget.currentSettings.customTitle,
     );
-  late final _yearController = TextEditingController(text: 
-    widget.currentSettings.customYear != null 
+  late final _yearController = TextEditingController(
+    text: widget.currentSettings.customYear != null 
     ? widget.currentSettings.customYear.toString()
     : "",
     );
@@ -48,21 +50,26 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     });
   }
 
+    // toggles the Custom Title / Custom Year options,
+    // disables one when the other is enabled,
+    // and wipes the textfields if the option is un-selected
+    void enableCustomTitle(){
+    setState(() {
+      titleIsChecked = !titleIsChecked;
+      if (!titleIsChecked){_titleController.text = "";}
+      if (titleIsChecked){yearIsChecked = false;}
+      _yearController.text = "";
+      print("enabling custom title");
+    });
+  }
   void enableCustomYear(){
     setState(() {
       yearIsChecked = !yearIsChecked;
+      if (!yearIsChecked){_yearController.text = "";}
       if (yearIsChecked) {titleIsChecked = false;}
       _titleController.text = "";
       print("enabling custom year");
       
-    });
-  }
-  void enableCustomTitle(){
-    setState(() {
-      titleIsChecked = !titleIsChecked;
-      if (titleIsChecked){yearIsChecked = false;}
-      _yearController.text = "";
-      print("enabling custom title");
     });
   }
 
@@ -76,11 +83,12 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     }
     if (_yearController.text.isNotEmpty) {
       int? newYear = int.tryParse(_yearController.text);
-      if (newYear == null || newYear > 1919 && newYear < 2024) {
-        newSettings.customYear = newYear;
-      } else {
-        _showDialog();
+      if (newYear == null || newYear < 1919 || newYear > 2024) {
+        _showErrorDialog();
+        _yearController.text = "";
         return;
+      } else {
+        newSettings.customYear = newYear;
       }
     }
     setState(() {
@@ -90,7 +98,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     Navigator.pop(context);
   }
 
-  void _showDialog() {
+  // 
+  void _showErrorDialog() {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -163,7 +172,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                   value: (titleIsChecked),
                   onChanged: (bool? value) {
                     setState(() {
-                      if (value != null && value){
+                      if (value != null){
                         enableCustomTitle();
                       }
                     });
@@ -190,7 +199,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                   value: yearIsChecked,
                   onChanged: (bool? value) {
                     setState(() {
-                      if (value != null && value){
+                      if (value != null){
                       enableCustomYear();
                       }
                     });

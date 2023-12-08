@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 class CustomTitleSetting extends StatefulWidget {
   final bool disabled;
-  const CustomTitleSetting({super.key, this.disabled = false, required this.enableCustomTitle});
+  const CustomTitleSetting({
+    super.key, 
+    this.disabled = false, 
+    required this.enableCustomTitle
+    });
 
   final void Function() enableCustomTitle;
 

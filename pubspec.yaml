@@ -23,6 +23,8 @@ flutter:
   uses-material-design: true
   assets:
   - assets/images/tmdb-logo-placeholder.png
+  - assets/images/hangman-dark-trans.png
+  - assets/images/hangman-light-trans.png
   # hangman images for mockup only, not used with permission
   - assets/images/hangman00.png
   - assets/images/hangman01.png

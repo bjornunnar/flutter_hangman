@@ -57,21 +57,16 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
     // toggles the Custom Title / Custom Year options,
     // disables one when the other is enabled,
-    // and wipes the textfields and saved settings if the option is un-selected
-    // this DOES erase the current settings without the user selecting SAVE..
     void enableCustomTitle(){
     setState(() {
       widget.titleIsChecked = !widget.titleIsChecked;
       if (!widget.titleIsChecked){
         titleController.text = "";
-        widget.currentSettings.customTitle = "";
         }
       if (widget.titleIsChecked){
         widget.yearIsChecked = false;
         yearController.text = "";
-        widget.currentSettings.customYear = null;
         }
-      print("enabling custom title");
     });
   }
   void enableCustomYear(){
@@ -86,9 +81,6 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
         titleController.text = "";
         widget.currentSettings.customTitle = "";
         }
-      
-      print("enabling custom year");
-      
     });
   }
 
@@ -143,8 +135,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     List difficultyLabelsList = widget.currentSettings.difficultyLabels;
     const textHeaders = TextStyle(fontSize: 18,fontWeight: FontWeight.bold,);
 
-    // checking if user already saved custom settings, and enabling those already
-    if (widget.currentSettings.customTitle != "" && widget.currentSettings.customTitle != null){widget.titleIsChecked = true;}
+    // checking if user already saved custom settings, and enabling those
+    if (widget.currentSettings.customTitle != null && widget.currentSettings.customTitle!.isNotEmpty){widget.titleIsChecked = true;}
     if (widget.currentSettings.customYear != null){widget.yearIsChecked = true;}
 
     return Padding(

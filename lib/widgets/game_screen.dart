@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
+import 'package:hangman/widgets/guess_entire_title.dart';
 import 'package:hangman/widgets/keyboard.dart';
 import 'package:hangman/widgets/guessed_letters_view.dart';
 import 'package:hangman/data/check_guess.dart';
@@ -55,6 +56,18 @@ class _GameScreenState extends State<GameScreen> {
           }
         }
       });
+  }
+
+  
+
+  void _openGuessEntireTitle() {
+    showModalBottomSheet(
+      useSafeArea:
+        true, // makes sure that the overlay does not overlap with camera lens etc.
+      isScrollControlled: true,
+      context: context,
+      // builder takes the hint object and a callback function
+      builder: (ctx) => GuessEntireTitle(hint: widget.hint, weHaveALoser: weHaveALoser, weHaveAWinner: weHaveAWinner));
   }
 
   void _winnerDialog(){
@@ -148,6 +161,10 @@ class _GameScreenState extends State<GameScreen> {
                 ElevatedButton.icon(
                   onPressed: _onQuit,
                   icon: const Icon(Icons.transit_enterexit),
+                  label: const Text("Quit")),
+                ElevatedButton.icon(
+                  onPressed: _openGuessEntireTitle,
+                  icon: const Icon(Icons.explicit),
                   label: const Text("Quit")),
               ],
             ),

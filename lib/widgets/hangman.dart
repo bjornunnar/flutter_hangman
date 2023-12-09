@@ -128,7 +128,7 @@ class _HangmanState extends State<Hangman> {
                 children: [
                   ElevatedButton(
                   onPressed: _openSettings, child: const Text("Settings")),
-              ElevatedButton(onPressed: _playGame, child: const Text("Play!")),
+              ElevatedButton(onPressed: _playGame, child: const Text("Play Now!")),
               ],)),
               SizedBox(height: 5),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
@@ -140,14 +140,14 @@ class _HangmanState extends State<Hangman> {
                     displayCustomTitle = !displayCustomTitle;
                   });
                 },
-                child: const Text("Custom Title is set.\nPress here to show the title on screen.")
+                child: const Text("Custom Title is set.")
                 )
               : const Text("Playing with a Random Movie Title"),
               SizedBox(height: 5),
               // show custom title if user chooses. Else empty string, to keep layout steady.
               (displayCustomTitle && currentSettings.customTitle != null)
-              ? Text("${currentSettings.customTitle!}") 
-              : Text(""),
+              ? Text("${currentSettings.customTitle!}", style: TextStyle(backgroundColor:Colors.red)) 
+              : Text("Press here to show the title on screen."),
               currentSettings.customYear != null
               ? GestureDetector(
                 onTap:() {

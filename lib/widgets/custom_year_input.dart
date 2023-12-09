@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 class CustomYearSetting extends StatefulWidget {
-  final bool disabled;
-  const CustomYearSetting({super.key, this.disabled = false, required this.enableCustomYear});
-
+  final bool yearIsChecked;
+  final TextEditingController yearController;
   final void Function() enableCustomYear;
+  const CustomYearSetting({
+    super.key, 
+    required this.yearController,
+    required this.yearIsChecked,
+    required this.enableCustomYear
+    });
+
+  
 
   @override
   State<CustomYearSetting> createState() => _CustomYearSettingState();
 }
 
 class _CustomYearSettingState extends State<CustomYearSetting> {
-  bool isChecked = false;
 
-  _onChecked(){
-    setState(() {
-      isChecked = !isChecked;
-      widget.enableCustomYear;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,29 @@ class _CustomYearSettingState extends State<CustomYearSetting> {
     return Row(
       children: [
         Checkbox(
-          isError: widget.disabled,
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: isChecked,
-          onChanged: _onChecked(),
+          value: widget.yearIsChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              if (value != null){
+              widget.enableCustomYear();
+              }
+            });
+          },
+        ),
+        Expanded(
+          child: TextField(
+            autofocus: widget.yearIsChecked,
+            enabled: widget.yearIsChecked,
+            keyboardType: TextInputType.number,
+            controller: widget.yearController,
+            maxLength: 4,
+            decoration: const InputDecoration(
+                label: Text(
+                    "(Must be between 1920 and 2023)")
+            ),
+          ),
         ),
       ],
     );

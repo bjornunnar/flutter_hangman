@@ -13,13 +13,12 @@ class _CreditsState extends State<Credits> {
   @override
   Widget build(context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        const Text("..."),
+        const Text("Made with:\nThe Movie Database API\nAnd tmdb_api package"),
         const Image(
           image: AssetImage("assets/images/tmdb-logo-placeholder.png"),
-          width: 300,
-          height: 300,
-          color: Color.fromARGB(150, 255, 255, 255),
+          width: 150,
         ),
         ElevatedButton(
             onPressed: () {

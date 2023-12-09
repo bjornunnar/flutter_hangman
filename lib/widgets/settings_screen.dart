@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
-// import 'package:hangman/widgets/custom_title_input.dart';
-// import 'package:hangman/widgets/custom_year_input.dart';
+import 'package:hangman/widgets/custom_title_input.dart';
+import 'package:hangman/widgets/custom_year_input.dart';
 
 class SettingsOverlay extends StatefulWidget {
-  const SettingsOverlay(
-      {super.key, required this.currentSettings, required this.updateSettings});
+  SettingsOverlay({
+      super.key, 
+      required this.currentSettings, 
+      required this.updateSettings
+      });
 
   // callback function to update current settings when the overlay is "saved"
   final void Function(Settings data) updateSettings;
   final Settings currentSettings;
+
+  // both custom settings are disabled by default
+  bool titleIsChecked = false;
+  bool yearIsChecked = false;
 
   @override
   State<SettingsOverlay> createState() {
@@ -18,15 +25,13 @@ class SettingsOverlay extends StatefulWidget {
 }
 
 class _SettingsOverlayState extends State<SettingsOverlay> {
-  // both custom settings are disabled by default
-  bool titleIsChecked = false;
-  bool yearIsChecked = false;
+
   // previously saved title or year is set again:
-  late final _titleController = TextEditingController(
+  late final titleController = TextEditingController(
     text: widget.currentSettings.customTitle 
     ?? widget.currentSettings.customTitle,
     );
-  late final _yearController = TextEditingController(
+  late final yearController = TextEditingController(
     text: widget.currentSettings.customYear != null 
     ? widget.currentSettings.customYear.toString()
     : "",
@@ -38,8 +43,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   // otherwise it lives on in memory
   @override
   void dispose() {
-    _titleController.dispose();
-    _yearController.dispose();
+    titleController.dispose();
+    yearController.dispose();
     super.dispose();
   }
 
@@ -52,22 +57,36 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
     // toggles the Custom Title / Custom Year options,
     // disables one when the other is enabled,
-    // and wipes the textfields if the option is un-selected
+    // and wipes the textfields and saved settings if the option is un-selected
+    // this DOES erase the current settings without the user selecting SAVE..
     void enableCustomTitle(){
     setState(() {
-      titleIsChecked = !titleIsChecked;
-      if (!titleIsChecked){_titleController.text = "";}
-      if (titleIsChecked){yearIsChecked = false;}
-      _yearController.text = "";
+      widget.titleIsChecked = !widget.titleIsChecked;
+      if (!widget.titleIsChecked){
+        titleController.text = "";
+        widget.currentSettings.customTitle = "";
+        }
+      if (widget.titleIsChecked){
+        widget.yearIsChecked = false;
+        yearController.text = "";
+        widget.currentSettings.customYear = null;
+        }
       print("enabling custom title");
     });
   }
   void enableCustomYear(){
     setState(() {
-      yearIsChecked = !yearIsChecked;
-      if (!yearIsChecked){_yearController.text = "";}
-      if (yearIsChecked) {titleIsChecked = false;}
-      _titleController.text = "";
+      widget.yearIsChecked = !widget.yearIsChecked;
+      if (!widget.yearIsChecked){
+        yearController.text = "";
+        widget.currentSettings.customYear = null;
+        }
+      if (widget.yearIsChecked) {
+        widget.titleIsChecked = false;
+        titleController.text = "";
+        widget.currentSettings.customTitle = "";
+        }
+      
       print("enabling custom year");
       
     });
@@ -78,14 +97,14 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     // check if the input fields are empty first, if so we don't include them.
     int newDifficulty = sliderDifficultySetting.floor();
     Settings newSettings = Settings(difficulty: newDifficulty);
-    if (_titleController.text.isNotEmpty) {
-      newSettings.customTitle = _titleController.text;
+    if (titleController.text.isNotEmpty) {
+      newSettings.customTitle = titleController.text;
     }
-    if (_yearController.text.isNotEmpty) {
-      int? newYear = int.tryParse(_yearController.text);
+    if (yearController.text.isNotEmpty) {
+      int? newYear = int.tryParse(yearController.text);
       if (newYear == null || newYear < 1919 || newYear > 2024) {
         _showErrorDialog();
-        _yearController.text = "";
+        yearController.text = "";
         return;
       } else {
         newSettings.customYear = newYear;
@@ -121,12 +140,12 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   Widget build(context) {
 
     // get the text labels for the difficulty settings, and set style for headers
-    List difficultyLabelsList = widget.currentSettings.labels.values.toList();
+    List difficultyLabelsList = widget.currentSettings.difficultyLabels;
     const textHeaders = TextStyle(fontSize: 18,fontWeight: FontWeight.bold,);
 
     // checking if user already saved custom settings, and enabling those already
-    if (widget.currentSettings.customTitle != null){titleIsChecked = true;}
-    if (widget.currentSettings.customYear != null){yearIsChecked = true;}
+    if (widget.currentSettings.customTitle != "" && widget.currentSettings.customTitle != null){widget.titleIsChecked = true;}
+    if (widget.currentSettings.customYear != null){widget.yearIsChecked = true;}
 
     return Padding(
       padding: const EdgeInsets.all(30.0),
@@ -166,59 +185,11 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
           const SizedBox(height: 30),
           const Text("Pick the Title",
           style: textHeaders,), 
-          Row(
-              children: [
-                Checkbox(
-                  value: (titleIsChecked),
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null){
-                        enableCustomTitle();
-                      }
-                    });
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    enabled: titleIsChecked,
-                    autocorrect: false,
-                    controller: _titleController,
-                    maxLength: 40,
-                    decoration: const InputDecoration(
-                        label: Text("..and write it down")),
-                  ),
-                ),
-              ],
-            ),
+          CustomTitleSetting(titleController: titleController, titleIsChecked: widget.titleIsChecked, enableCustomTitle: enableCustomTitle),
             const SizedBox(height: 50),
           const Text("Pick the Year",
           style: textHeaders),
-          Row(
-            children: [
-              Checkbox(
-                  value: yearIsChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null){
-                      enableCustomYear();
-                      }
-                    });
-                  },
-                ),
-              Expanded(
-                child: TextField(
-                  enabled: yearIsChecked,
-                  keyboardType: TextInputType.number,
-                  controller: _yearController,
-                  maxLength: 4,
-                  decoration: const InputDecoration(
-                      label: Text(
-                          "(Must be between 1920 and 2023)")
-                  ),
-                ),
-              ),
-            ],
-          ),
+          CustomYearSetting(yearController: yearController, yearIsChecked: widget.yearIsChecked, enableCustomYear: enableCustomYear),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

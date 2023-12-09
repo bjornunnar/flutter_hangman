@@ -42,6 +42,7 @@ class Settings{
     this.customYear,
     this.customTitle,
   });
+
   
   Map<int, String> labels = 
     {
@@ -51,10 +52,10 @@ class Settings{
       4: "Hard", 
       5: "OMG"
     };
-  Map<int,String> get difficultyLabels{
-    return labels;
-  }
   
+  List get difficultyLabels {
+    return labels.values.toList();
+  }
 }
 
 class ResponsiveSizes{

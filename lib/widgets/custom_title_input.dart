@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 class CustomTitleSetting extends StatefulWidget {
-  final bool disabled;
+  final bool titleIsChecked;
+  final TextEditingController titleController;
+  final void Function() enableCustomTitle;
   const CustomTitleSetting({
     super.key, 
-    this.disabled = false, 
+    required this.titleController,
+    required this.titleIsChecked, 
     required this.enableCustomTitle
     });
 
-  final void Function() enableCustomTitle;
+  
 
   @override
   State<CustomTitleSetting> createState() => _CustomTitleSettingState();
 }
 
 class _CustomTitleSettingState extends State<CustomTitleSetting> {
-  bool isChecked = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +44,28 @@ class _CustomTitleSettingState extends State<CustomTitleSetting> {
     return Row(
       children: [
         Checkbox(
-          isError: widget.disabled,
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: isChecked,
+          value: widget.titleIsChecked,
           onChanged: (bool? value) {
             setState(() {
-              isChecked = value!;
-              widget.enableCustomTitle;
+              if (value != null){
+                widget.enableCustomTitle();
+              }
             });
           },
+        ),
+        Expanded(
+          child: TextField(
+            autofocus: widget.titleIsChecked,
+            textCapitalization: TextCapitalization.characters,
+            enabled: widget.titleIsChecked,
+            autocorrect: false,
+            controller: widget.titleController,
+            maxLength: 40,
+            decoration: const InputDecoration(
+                label: Text("..and write it down")),
+          ),
         ),
       ],
     );

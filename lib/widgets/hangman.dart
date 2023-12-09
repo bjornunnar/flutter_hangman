@@ -133,6 +133,8 @@ class _HangmanState extends State<Hangman> {
               SizedBox(height: 5),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
               SizedBox(height: 5),
+
+              // if there is a custom title, allow user to see it
               currentSettings.customTitle != null
               ? GestureDetector(
                 onTap:() {
@@ -140,14 +142,14 @@ class _HangmanState extends State<Hangman> {
                     displayCustomTitle = !displayCustomTitle;
                   });
                 },
-                child: const Text("Custom Title is set.")
+                child: const Text("Custom Title is set.\nPress here to show the title on screen.")
                 )
               : const Text("Playing with a Random Movie Title"),
               SizedBox(height: 5),
-              // show custom title if user chooses. Else empty string, to keep layout steady.
               (displayCustomTitle && currentSettings.customTitle != null)
               ? Text("${currentSettings.customTitle!}", style: TextStyle(backgroundColor:Colors.red)) 
-              : Text("Press here to show the title on screen."),
+              : Text(""),
+              // if a custom year is set, allow user to view it
               currentSettings.customYear != null
               ? GestureDetector(
                 onTap:() {
@@ -159,7 +161,7 @@ class _HangmanState extends State<Hangman> {
                 )
               : const Text("Playing with a Random Release Year"),
               (displayCustomYear && currentSettings.customYear != null) 
-              ? Text(currentSettings.customYear!.toString())
+              ? Text(currentSettings.customYear!.toString(), style: TextStyle(backgroundColor: Colors.red))
               : Text(""),
               
               SizedBox(width: availableWidth*0.8,

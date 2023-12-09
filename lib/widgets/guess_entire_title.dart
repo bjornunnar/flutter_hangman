@@ -5,13 +5,11 @@ import 'package:hangman/widgets/current_title.dart';
 
 class GuessEntireTitle extends StatefulWidget {
   Hint hint;
-  bool weHaveALoser;
-  bool weHaveAWinner;
+  final Function checkEntireTitleGuess;
   GuessEntireTitle({
     super.key, 
     required this.hint,
-    required this.weHaveALoser,
-    required this.weHaveAWinner,
+    required this.checkEntireTitleGuess,
     });
   
 
@@ -29,32 +27,22 @@ final _titleGuess = TextEditingController();
     super.dispose();
   }
 
-  void checkEntireTitleGuess(Hint hint, String guess){
-    if (hint.cleanTitle.toLowerCase() == guess.toLowerCase()){
-      setState(() {
-        widget.weHaveAWinner = true;
-      });
-    } else {
-      setState(() {
-        widget.weHaveALoser = true;
-      });
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
 
     int maxLength = 12;
-    double gameScreenWidth = MediaQuery.of(context).size.width;
+    double gameScreenWidth = MediaQuery.of(context).size.width-100;
     ResponsiveSizes titleLetterWidth = ResponsiveSizes(availableWidth: gameScreenWidth, padding: 3, numberOfLetters: maxLength);
 
     return AlertDialog(
-      title: const Text('You Lose', textAlign: TextAlign.center,),
+      title: const Text('All or Nothing!', textAlign: TextAlign.center,),
       content: Column(
         children: [
           for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: maxLength))
               CurrentTitle(title: fragment as List<String>, titleLetterWidth: titleLetterWidth,),
-          const Text("Input your guess.",textAlign: TextAlign.center,),
+          const Text("Input your guess. If you're off, you lose.",textAlign: TextAlign.center,),
           Expanded(
           child: TextField(
             autofocus: true,
@@ -81,6 +69,7 @@ final _titleGuess = TextEditingController();
           child: const Text('Confirm Guess'),
           onPressed: () {
             Navigator.of(context).pop();
+            widget.checkEntireTitleGuess(widget.hint.cleanTitle, _titleGuess.text);
           },
         ),
       ],

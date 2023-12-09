@@ -32,6 +32,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool weHaveAWinner = false;
   bool weHaveALoser = false;
+  late bool disableKeyboard = (weHaveALoser || weHaveAWinner);
   
   void confirmGuess(String letter) {
       setState(() {
@@ -58,7 +59,19 @@ class _GameScreenState extends State<GameScreen> {
       });
   }
 
-  
+  void checkEntireTitleGuess(String title, String guess){
+    if (title.toLowerCase() == guess.toLowerCase()){
+      setState(() {
+        weHaveAWinner = true;
+        _winnerDialog();
+      });
+    } else {
+      setState(() {
+        weHaveALoser = true;
+        _loserDialog();
+      });
+    }
+  }
 
   void _openGuessEntireTitle() {
     showModalBottomSheet(
@@ -67,7 +80,7 @@ class _GameScreenState extends State<GameScreen> {
       isScrollControlled: true,
       context: context,
       // builder takes the hint object and a callback function
-      builder: (ctx) => GuessEntireTitle(hint: widget.hint, weHaveALoser: weHaveALoser, weHaveAWinner: weHaveAWinner));
+      builder: (ctx) => GuessEntireTitle(hint: widget.hint, checkEntireTitleGuess: checkEntireTitleGuess));
   }
 
   void _winnerDialog(){
@@ -149,23 +162,31 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ],
             ),
-            for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: 12))
+            // check if game is won or lost. if so, we just get the full title to display.
+            // if not, we display what the user has so far
+            // it's split into lines depending on the screen width and length of words
+            for (List fragment in splitTheTitle(
+              wholeTitle: (weHaveALoser || weHaveAWinner) 
+              ? widget.hint.cleanTitleAsList 
+              : widget.hint.hiddenTitleAsList, 
+              maxlength: 12))
               CurrentTitle(title: fragment as List<String>, titleLetterWidth: titleLetterWidth,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
-                  icon: const Icon(Icons.transfer_within_a_station),
-                  label: const Text("Give Up")),
-                ElevatedButton.icon(
                   onPressed: _onQuit,
                   icon: const Icon(Icons.transit_enterexit),
-                  label: const Text("Quit")),
+                  label: const Text("I Quit")),
+                ElevatedButton.icon(
+                  onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
+                  icon: const Icon(Icons.transfer_within_a_station),
+                  label: const Text("Just Tell Me")),
+                
                 ElevatedButton.icon(
                   onPressed: _openGuessEntireTitle,
                   icon: const Icon(Icons.explicit),
-                  label: const Text("Quit")),
+                  label: const Text("I Have It!")),
               ],
             ),
       
@@ -173,7 +194,7 @@ class _GameScreenState extends State<GameScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth,),
+                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth, disableKeyboard: disableKeyboard),
               ],
             )
           ],

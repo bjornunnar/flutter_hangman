@@ -8,10 +8,13 @@ import 'package:hangman/models/classes.dart';
 class Keyboard extends StatefulWidget {
   final Function confirmGuess;
   final ResponsiveSizes titleLetterWidth;
-  const Keyboard({
+  bool disableKeyboard; // TODO, this is not working yet
+  Keyboard({
     super.key,
     required this.confirmGuess,
-    required this.titleLetterWidth});
+    required this.titleLetterWidth,
+    required this.disableKeyboard
+    });
 
   @override
   State<Keyboard> createState(){
@@ -68,7 +71,7 @@ class _KeyboardState extends State<Keyboard> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               for (int a = 0; a < qwertyKeyboard[i].length; a++)
-                // if we are on the last key in the list, make a custom "GO" key:
+                // if we are on the last key in the list, make a custom "GUESS" key:
                 (i == 2 && a == qwertyKeyboard[i].length - 1) ?
                 Padding(
                     padding: EdgeInsets.all(widget.titleLetterWidth.padding),
@@ -87,9 +90,7 @@ class _KeyboardState extends State<Keyboard> {
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                           ),
-                        onPressed: () {
-                          _onPressGo();
-                        },
+                        onPressed: () { _onPressGo();},
                         child: Text(qwertyKeyboard[i][a], style:const TextStyle(fontSize: 12)),
                       ),
                     ),

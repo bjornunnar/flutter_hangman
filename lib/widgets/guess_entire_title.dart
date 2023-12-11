@@ -5,11 +5,11 @@ import 'package:hangman/widgets/current_title.dart';
 
 class GuessEntireTitle extends StatefulWidget {
   Hint hint;
-  final Function checkEntireTitleGuess;
+  final Function checkTitle;
   GuessEntireTitle({
     super.key, 
     required this.hint,
-    required this.checkEntireTitleGuess,
+    required this.checkTitle,
     });
   
 
@@ -69,7 +69,8 @@ final _titleGuess = TextEditingController();
           child: const Text('Confirm Guess'),
           onPressed: () {
             Navigator.of(context).pop();
-            widget.checkEntireTitleGuess(widget.hint.cleanTitle, _titleGuess.text);
+            print("checking inside");
+            widget.checkTitle(widget.hint.cleanTitle, _titleGuess.text);
           },
         ),
       ],

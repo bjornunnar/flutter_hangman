@@ -90,7 +90,7 @@ class _KeyboardState extends State<Keyboard> {
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                           ),
-                        onPressed: () { _onPressGo();},
+                        onPressed: widget.disableKeyboard ? (){} : () { _onPressGo();},
                         child: Text(qwertyKeyboard[i][a], style:const TextStyle(fontSize: 12)),
                       ),
                     ),

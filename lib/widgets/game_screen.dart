@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/data/check_entire_title_guess.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/guess_entire_title.dart';
 import 'package:hangman/widgets/keyboard.dart';
@@ -32,7 +33,10 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool weHaveAWinner = false;
   bool weHaveALoser = false;
-  late bool disableKeyboard = (weHaveALoser || weHaveAWinner);
+  
+  bool isGameOver(){
+    return weHaveALoser || weHaveAWinner;
+  }
   
   void confirmGuess(String letter) {
       setState(() {
@@ -59,8 +63,10 @@ class _GameScreenState extends State<GameScreen> {
       });
   }
 
-  void checkEntireTitleGuess(String title, String guess){
-    if (title.toLowerCase() == guess.toLowerCase()){
+  // Takes the user's guess from the bottom sheet input, runs through the comparison function and returns either a winner or loser
+  void checkTitleCallback(String title, String guess){
+    print("checking");
+    if (checkEntireTitleGuess(title, guess)){
       setState(() {
         weHaveAWinner = true;
         _winnerDialog();
@@ -80,7 +86,7 @@ class _GameScreenState extends State<GameScreen> {
       isScrollControlled: true,
       context: context,
       // builder takes the hint object and a callback function
-      builder: (ctx) => GuessEntireTitle(hint: widget.hint, checkEntireTitleGuess: checkEntireTitleGuess));
+      builder: (ctx) => GuessEntireTitle(hint: widget.hint, checkTitle: checkTitleCallback));
   }
 
   void _winnerDialog(){
@@ -116,6 +122,19 @@ class _GameScreenState extends State<GameScreen> {
     widget.quitGame();
   }
 
+  // roll through the hangman images based on number of guesses left
+  // we only have 6 images so easy mode shows the first image for a few turns
+  int hangmanImageNumber(int tries){
+    if (isGameOver()){
+      return 0;
+    }
+    if (tries >= 6){
+      return 6;
+    } else {
+      return tries;
+    }
+  }
+
   @override
   Widget build(context) {
     // how many letters we want to display on a single line.
@@ -124,12 +143,6 @@ class _GameScreenState extends State<GameScreen> {
     double gameScreenWidth = MediaQuery.of(context).size.width;
     ResponsiveSizes titleLetterWidth = ResponsiveSizes(availableWidth: gameScreenWidth, padding: 3, numberOfLetters: maxLength);
     double guessedLettersViewWidth = ((titleLetterWidth.letterWidth)*3)+(titleLetterWidth.padding*8);
-
-    // roll through the hangman images based on number of guesses left
-    // we only have 6 images so easy mode shows the first image for a few turns
-    int hangmanImageNumber;
-    widget.hint.tries >= 6 ? hangmanImageNumber = 6 : hangmanImageNumber = widget.hint.tries;
-    if (weHaveALoser){hangmanImageNumber = 0;}
 
     return Center(
       child: Padding(
@@ -144,7 +157,7 @@ class _GameScreenState extends State<GameScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/hangman0$hangmanImageNumber.png")
+                      image: AssetImage("assets/images/hangman0${hangmanImageNumber(widget.hint.tries)}.png")
                     )
                   ),
                   width: 170,
@@ -179,12 +192,12 @@ class _GameScreenState extends State<GameScreen> {
                   icon: const Icon(Icons.transit_enterexit),
                   label: const Text("I Quit")),
                 ElevatedButton.icon(
-                  onPressed: weHaveALoser == true || weHaveAWinner == true ? (){} : _onGiveUp,
+                  onPressed: isGameOver() ? (){} : _onGiveUp,
                   icon: const Icon(Icons.transfer_within_a_station),
                   label: const Text("Just Tell Me")),
                 
                 ElevatedButton.icon(
-                  onPressed: _openGuessEntireTitle,
+                  onPressed: isGameOver() ? (){} : _openGuessEntireTitle,
                   icon: const Icon(Icons.explicit),
                   label: const Text("I Have It!")),
               ],
@@ -194,7 +207,7 @@ class _GameScreenState extends State<GameScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth, disableKeyboard: disableKeyboard),
+                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth, disableKeyboard: isGameOver()),
               ],
             )
           ],

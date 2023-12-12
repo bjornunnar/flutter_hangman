@@ -22,9 +22,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-  - assets/images/tmdb-logo-placeholder.png
-  - assets/images/hangman-dark-trans.png
-  - assets/images/hangman-light-trans.png
+  - assets/images/tmdb-logo.png
+  - assets/images/dark-hangman-start.png
+  - assets/images/hangman-start.png
   # hangman images for mockup only, not used with permission
   - assets/images/hangman00.png
   - assets/images/hangman01.png
@@ -33,6 +33,13 @@ flutter:
   - assets/images/hangman04.png
   - assets/images/hangman05.png
   - assets/images/hangman06.png
+  - assets/images/dark-hangman00.png
+  - assets/images/dark-hangman01.png
+  - assets/images/dark-hangman02.png
+  - assets/images/dark-hangman03.png
+  - assets/images/dark-hangman04.png
+  - assets/images/dark-hangman05.png
+  - assets/images/dark-hangman06.png
   fonts:
   - family: Lato
     fonts:

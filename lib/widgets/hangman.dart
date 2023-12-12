@@ -42,13 +42,13 @@ class _HangmanState extends State<Hangman> {
   }
 
   // onclick to open the credits display
-  void _openCredits() {
+  void _openCredits(double width) {
     showModalBottomSheet(
       useSafeArea:
           true, // makes sure that the overlay does not overlap with camera lens etc.
       context: context,
       // builder takes the current settings object, and the updateSettings function
-      builder: (ctx) => const Credits(),
+      builder: (ctx) => Credits(width: width),
     );
   }
 
@@ -102,6 +102,9 @@ class _HangmanState extends State<Hangman> {
 
     final double availableWidth = MediaQuery.of(context).size.width;
 
+    // check if dark mode is active, we use this to display white/black starting image
+    final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     // this only gets called when user clicks PLAY
     if (gameOn) {
       return Scaffold(
@@ -119,9 +122,8 @@ class _HangmanState extends State<Hangman> {
             children: [
               const Text("The Hanged Man",style:TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const Text("(who only knew movie titles)",style: TextStyle(color: Colors.grey),),
-              Image.asset("assets/images/hangman-light-trans.png",
+              Image.asset( isDarkMode ? "assets/images/dark-hangman-start.png" : "assets/images/hangman-start.png",
                 height: availableWidth > 500 ? 410 : availableWidth*0.8),
-              
               SizedBox(width: availableWidth*0.8,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -130,25 +132,35 @@ class _HangmanState extends State<Hangman> {
                   onPressed: _openSettings, child: const Text("Settings")),
               ElevatedButton(onPressed: _playGame, child: const Text("Play Now!")),
               ],)),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
 
               // if there is a custom title, allow user to see it
-              currentSettings.customTitle != null
+              currentSettings.customTitle != null || currentSettings.customTitle == ""
               ? GestureDetector(
                 onTap:() {
                   setState(() {
                     displayCustomTitle = !displayCustomTitle;
                   });
                 },
-                child: const Text("Custom Title is set.\nPress here to show the title on screen.")
+                child: Text(
+                  displayCustomTitle 
+                  ? "Custom Title is set.\nPress here to hide."
+                  : "Custom Title is set.\nPress here to show the title on screen.",
+                  textAlign: TextAlign.center,)
                 )
               : const Text("Playing with a Random Movie Title"),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               (displayCustomTitle && currentSettings.customTitle != null)
-              ? Text("${currentSettings.customTitle!}", style: TextStyle(backgroundColor:Colors.red)) 
-              : Text(""),
+              ? Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFB71C1C))),
+                child: Padding(padding: const EdgeInsets.all(5), child: Text(currentSettings.customTitle!,)  
+                  
+                )
+              )
+              : const SizedBox.shrink(),
               // if a custom year is set, allow user to view it
               currentSettings.customYear != null
               ? GestureDetector(
@@ -157,19 +169,33 @@ class _HangmanState extends State<Hangman> {
                     displayCustomYear = !displayCustomYear;
                   });
                 },
-                child: const Text("Playing with a set Custom Year.\nPress here to show on screen.")
+                child: Text(
+                  displayCustomYear 
+                  ? "Playing with a set Custom Year.\nPress here to hide."
+                  : "Playing with a set Custom Year.\nPress here to show on screen.",
+                  textAlign: TextAlign.center,
+                  )
                 )
               : const Text("Playing with a Random Release Year"),
               (displayCustomYear && currentSettings.customYear != null) 
-              ? Text(currentSettings.customYear!.toString(), style: TextStyle(backgroundColor: Colors.red))
-              : Text(""),
+              ? Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFB71C1C))),
+                child: Padding(
+                  padding: const EdgeInsets.all(5), 
+                  child: Text(currentSettings.customYear!.toString())
+                )
+              )
+              : const SizedBox.shrink(),
               
               SizedBox(width: availableWidth*0.8,
               child:Row(
                 children: [
-                  Spacer(),
+                  const Spacer(),
                   TextButton(
-                    onPressed: _openCredits,
+                    onPressed: (){
+                      _openCredits(availableWidth);
+                    } ,
                     child: const Text("Credits"),
                   ),
               ],)

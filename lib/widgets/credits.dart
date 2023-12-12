@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Credits extends StatefulWidget {
-  const Credits({super.key});
+  final double width;
+  const Credits({super.key, required this.width});
 
   @override
   State<Credits> createState() {
@@ -12,12 +13,14 @@ class Credits extends StatefulWidget {
 class _CreditsState extends State<Credits> {
   @override
   Widget build(context) {
-    return Column(
+    return Container(
+      width: widget.width*0.8,
+    child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        const Text("Made with:\nThe Movie Database API\nAnd tmdb_api package"),
+        const Text("Made with:\nThe Movie Database API"),
         const Image(
-          image: AssetImage("assets/images/tmdb-logo-placeholder.png"),
+          image: AssetImage("assets/images/tmdb-logo.png"),
           width: 150,
         ),
         ElevatedButton(
@@ -27,6 +30,7 @@ class _CreditsState extends State<Credits> {
             },
             child: const Text("Close Credits")),
       ],
+    ),
     );
   }
 }

@@ -54,7 +54,7 @@ class _KeyboardButtonState extends State<KeyboardButton> {
         fit: BoxFit.contain,
         child: Text(
           widget.keyboardKey,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
         ),
       ),
     );

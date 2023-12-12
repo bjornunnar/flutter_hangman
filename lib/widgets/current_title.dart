@@ -49,7 +49,7 @@ class CurrentTitle extends StatelessWidget{
             child: 
               (letter == " ") ?
               SizedBox(
-                width: titleLetterWidth.letterWidth,
+                width: titleLetterWidth.letterWidth*0.5,
                 height: titleLetterWidth.letterWidth,)
               :
               Container(

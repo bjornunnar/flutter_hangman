@@ -91,7 +91,7 @@ class _KeyboardState extends State<Keyboard> {
                           ),
                           ),
                         onPressed: widget.disableKeyboard ? (){} : () { _onPressGo();},
-                        child: Text(qwertyKeyboard[i][a], style:const TextStyle(fontSize: 12)),
+                        child: Text(qwertyKeyboard[i][a], style:const TextStyle(fontSize: 12, color: Color(0xFFFFFFFF))),
                       ),
                     ),
                 )

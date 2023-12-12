@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/widgets/hangman.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    themeMode: ThemeMode.dark,
-    // theme: lightTheme,
-    // darkTheme: darkTheme,
-    home: Hangman(),
-  ));
+
+  // locking the app in portrait mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((fn){
+
+    runApp(MaterialApp(
+      // themeMode: ThemeMode.dark,
+      theme: hangmanLight,
+      darkTheme: hangmanDark,
+      home: const Hangman(),
+    ));
+
+  });
 }
 
 var kColorScheme =
@@ -16,7 +24,7 @@ var kDarkColorScheme = ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 23, 38, 105),
     brightness: Brightness.dark);
 
-ThemeData lightTheme = ThemeData().copyWith(
+ThemeData hangmanLight = ThemeData().copyWith(
   brightness: Brightness.light,
   useMaterial3: true,
   colorScheme: kColorScheme,
@@ -26,7 +34,7 @@ ThemeData lightTheme = ThemeData().copyWith(
   )),
 );
 
-ThemeData darkTheme = ThemeData.dark().copyWith(
+ThemeData hangmanDark = ThemeData.dark().copyWith(
   brightness: Brightness.dark,
   useMaterial3: true,
   colorScheme: kDarkColorScheme,

@@ -165,15 +165,16 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                     fontWeight: FontWeight.bold,
                     color: sliderDifficultySetting == i.toDouble()
                         ? Colors.blue // Highlight the selected value
-                        : Colors.black,
+                        : null
                   ),
                 ),
               ],
             ),
           const SizedBox(height: 50,),
-          const Text("The options below are.. optional."),
-          const Text("You can choose a title to play with, or the movie release year you would like to play."),
-          const Text("Note that you can only have one or the other!", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("The options below are.. optional.",textAlign: TextAlign.center,),
+          const Text("You can choose a title to play with, or the movie release year you would like to play.",textAlign: TextAlign.center,),
+          const Text("The release year will be approximated.",textAlign: TextAlign.center,),
+          const Text("Note that you can only have one or the other!", style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
           const SizedBox(height: 30),
           const Text("Pick the Title",
           style: textHeaders,), 

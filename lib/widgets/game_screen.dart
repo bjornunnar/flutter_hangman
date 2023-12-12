@@ -65,7 +65,6 @@ class _GameScreenState extends State<GameScreen> {
 
   // Takes the user's guess from the bottom sheet input, runs through the comparison function and returns either a winner or loser
   void checkTitleCallback(String title, String guess){
-    print("checking");
     if (checkEntireTitleGuess(title, guess)){
       setState(() {
         weHaveAWinner = true;
@@ -125,10 +124,11 @@ class _GameScreenState extends State<GameScreen> {
   // roll through the hangman images based on number of guesses left
   // we only have 6 images so easy mode shows the first image for a few turns
   int hangmanImageNumber(int tries){
-    if (isGameOver()){
+    if (weHaveALoser){
       return 0;
-    }
-    if (tries >= 6){
+    } else if (weHaveAWinner){
+      return 6;
+    } else if (tries >= 6){
       return 6;
     } else {
       return tries;
@@ -144,6 +144,9 @@ class _GameScreenState extends State<GameScreen> {
     ResponsiveSizes titleLetterWidth = ResponsiveSizes(availableWidth: gameScreenWidth, padding: 3, numberOfLetters: maxLength);
     double guessedLettersViewWidth = ((titleLetterWidth.letterWidth)*3)+(titleLetterWidth.padding*8);
 
+    // check if dark mode is active, we use this to display white/black progress images
+    final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -153,18 +156,30 @@ class _GameScreenState extends State<GameScreen> {
             Row(
               children: [
                 Container(
-
                   decoration: BoxDecoration(
-                    border: Border.all(),
                     image: DecorationImage(
-                      image: AssetImage("assets/images/hangman0${hangmanImageNumber(widget.hint.tries)}.png")
+                      image: isDarkMode
+                      ? AssetImage("assets/images/dark-hangman0${hangmanImageNumber(widget.hint.tries)}.png")
+                      : AssetImage("assets/images/hangman0${hangmanImageNumber(widget.hint.tries)}.png"),
                     )
                   ),
                   width: 170,
                   height: 200,
                 ),
                 const Spacer(),
-                Container(
+
+                // only display the guessed letters bin after the first fail
+                widget.hint.guessedLetters.isNotEmpty
+                ? Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    const Column(
+                      children: [
+                        Text("Guessed\nLetters", textAlign: TextAlign.center,),
+                        Icon(Icons.keyboard_arrow_down_rounded)
+                      ],
+                    ),
+                    Container(
                   width: guessedLettersViewWidth,
                   height: 200,
                   child: 
@@ -173,8 +188,14 @@ class _GameScreenState extends State<GameScreen> {
                       titleLetterWidth: titleLetterWidth,
                     ),
                 ),
+                  ],
+                )
+                : const SizedBox.shrink(),
               ],
             ),
+            const Text("Guess the title!",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,),
             // check if game is won or lost. if so, we just get the full title to display.
             // if not, we display what the user has so far
             // it's split into lines depending on the screen width and length of words
@@ -188,17 +209,16 @@ class _GameScreenState extends State<GameScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
+                  icon: const Icon(Icons.backspace_outlined, size: 16),
                   onPressed: _onQuit,
-                  icon: const Icon(Icons.transit_enterexit),
-                  label: const Text("I Quit")),
+                  label: const Text("I Quit",)),                  
                 ElevatedButton.icon(
                   onPressed: isGameOver() ? (){} : _onGiveUp,
-                  icon: const Icon(Icons.transfer_within_a_station),
-                  label: const Text("Just Tell Me")),
-                
+                  icon: const Icon(Icons.question_answer_outlined, size: 16,),
+                  label: const Text("Tell Me")),
                 ElevatedButton.icon(
                   onPressed: isGameOver() ? (){} : _openGuessEntireTitle,
-                  icon: const Icon(Icons.explicit),
+                  icon: const Icon(Icons.expand_circle_down_outlined, size: 16),
                   label: const Text("I Have It!")),
               ],
             ),
@@ -207,7 +227,11 @@ class _GameScreenState extends State<GameScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Keyboard(confirmGuess: confirmGuess, titleLetterWidth: titleLetterWidth, disableKeyboard: isGameOver()),
+                Keyboard(
+                  confirmGuess: confirmGuess, 
+                  titleLetterWidth: titleLetterWidth, 
+                  disableKeyboard: isGameOver()
+                ),
               ],
             )
           ],

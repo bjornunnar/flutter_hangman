@@ -21,6 +21,7 @@ class WinnerScreen extends StatelessWidget {
               "You correctly guessed the movie:", 
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 10),
             Text("${movie!.title} (${movie!.releaseYear})",
             textAlign: TextAlign.center,
               style: const TextStyle(
@@ -28,7 +29,9 @@ class WinnerScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 30),
             Image(image: NetworkImage(movie!.poster)),
+            const SizedBox(height: 30),
             Text(movie!.overview,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,)

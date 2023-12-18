@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hangman/data/construct_hint.dart';
 import 'package:hangman/data/movie_details.dart';
 import 'package:hangman/models/classes.dart';
-import 'package:hangman/widgets/game_screen.dart';
-import 'package:hangman/widgets/settings_screen.dart';
-import 'package:hangman/widgets/credits.dart';
+import 'package:hangman/widgets/game-screen/game_screen.dart';
+import 'package:hangman/widgets/start-screen/settings_screen.dart';
+import 'package:hangman/widgets/start-screen/credits.dart';
 
 class Hangman extends StatefulWidget {
   const Hangman({super.key});
@@ -55,13 +55,13 @@ class _HangmanState extends State<Hangman> {
   // onClick to open the settings overlay. Takes as argument the current Settings
   void _openSettings() {
     showModalBottomSheet(
-        useSafeArea:
-            true, // makes sure that the overlay does not overlap with camera lens etc.
-        isScrollControlled: true,
-        context: context,
-        // builder takes the current settings object, and the updateSettings function
-        builder: (ctx) => SettingsOverlay(
-            currentSettings: currentSettings, updateSettings: updateSettings));
+      useSafeArea:
+        true, // makes sure that the overlay does not overlap with camera lens etc.
+      isScrollControlled: true,
+      context: context,
+      // builder takes the current settings object, and the updateSettings function
+      builder: (ctx) => SettingsOverlay(
+        currentSettings: currentSettings, updateSettings: updateSettings));
   }
 
   void _playGame() async {

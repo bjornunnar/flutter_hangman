@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/data/check_entire_title_guess.dart';
 import 'package:hangman/models/classes.dart';
-import 'package:hangman/widgets/guess_entire_title.dart';
-import 'package:hangman/widgets/keyboard.dart';
-import 'package:hangman/widgets/guessed_letters_view.dart';
+import 'package:hangman/widgets/game-screen/guess_entire_title.dart';
+import 'package:hangman/widgets/game-screen/keyboard.dart';
+import 'package:hangman/widgets/game-screen/guessed_letters_view.dart';
 import 'package:hangman/data/check_guess.dart';
 import 'package:hangman/data/check_winner.dart';
 import 'package:hangman/data/check_loser.dart';
-import 'package:hangman/widgets/current_title.dart';
+import 'package:hangman/widgets/game-screen/current_title.dart';
 import 'package:hangman/data/split_the_title.dart';
-import 'package:hangman/widgets/loser_screen.dart';
-import 'package:hangman/widgets/loser_screen_custom.dart';
-import 'package:hangman/widgets/winner_screen.dart';
-import 'package:hangman/widgets/winner_screen_custom.dart';
+import 'package:hangman/widgets/end-screens/loser_screen.dart';
+import 'package:hangman/widgets/end-screens/loser_screen_custom.dart';
+import 'package:hangman/widgets/end-screens/winner_screen.dart';
+import 'package:hangman/widgets/end-screens/winner_screen_custom.dart';
 
 
 class GameScreen extends StatefulWidget {
@@ -142,10 +142,17 @@ class _GameScreenState extends State<GameScreen> {
     int maxLength = 12;
     double gameScreenWidth = MediaQuery.of(context).size.width;
     ResponsiveSizes titleLetterWidth = ResponsiveSizes(availableWidth: gameScreenWidth, padding: 3, numberOfLetters: maxLength);
+    // we want the guessed letters' width to match the title letters' width, so we pass this on to the guessed letters view widget
     double guessedLettersViewWidth = ((titleLetterWidth.letterWidth)*3)+(titleLetterWidth.padding*8);
 
     // check if dark mode is active, we use this to display white/black progress images
     final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
+    // onscreen message
+    final onScreenMessage;
+    if (weHaveALoser){onScreenMessage = "You Lost!";}
+    else if (weHaveAWinner){onScreenMessage = "You Won!";}
+    else {onScreenMessage = "Guess the Title!";}
 
     return Center(
       child: Padding(
@@ -193,8 +200,8 @@ class _GameScreenState extends State<GameScreen> {
                 : const SizedBox.shrink(),
               ],
             ),
-            const Text("Guess the title!",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(onScreenMessage,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,),
             // check if game is won or lost. if so, we just get the full title to display.
             // if not, we display what the user has so far
@@ -203,7 +210,7 @@ class _GameScreenState extends State<GameScreen> {
               wholeTitle: (weHaveALoser || weHaveAWinner) 
               ? widget.hint.cleanTitleAsList 
               : widget.hint.hiddenTitleAsList, 
-              maxlength: 12))
+              maxlength: maxLength))
               CurrentTitle(title: fragment as List<String>, titleLetterWidth: titleLetterWidth,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -211,7 +218,7 @@ class _GameScreenState extends State<GameScreen> {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.backspace_outlined, size: 16),
                   onPressed: _onQuit,
-                  label: const Text("I Quit",)),                  
+                  label: const Text("I Quit",)), 
                 ElevatedButton.icon(
                   onPressed: isGameOver() ? (){} : _onGiveUp,
                   icon: const Icon(Icons.question_answer_outlined, size: 16,),

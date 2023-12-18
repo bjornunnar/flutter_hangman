@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/qwerty_keyboard.dart';
-import 'package:hangman/widgets/keyboard_button.dart';
+import 'package:hangman/widgets/game-screen/keyboard_button.dart';
 import 'package:hangman/models/classes.dart';
 
 

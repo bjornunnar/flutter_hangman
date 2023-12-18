@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/data/split_the_title.dart';
-import 'package:hangman/widgets/current_title.dart';
+import 'package:hangman/widgets/game-screen/current_title.dart';
 
 class GuessEntireTitle extends StatefulWidget {
   Hint hint;
@@ -27,6 +27,18 @@ final _titleGuess = TextEditingController();
     super.dispose();
   }
 
+// display all characters in the text input field as capitalized
+@override
+  void initState() {
+    super.initState();
+    _titleGuess.addListener(() {
+      final text = _titleGuess.text;
+      _titleGuess.value = _titleGuess.value.copyWith(
+        text: text.toUpperCase(), // Force uppercase for the text
+      );
+    });
+  }
+
 
 
   @override
@@ -42,29 +54,33 @@ final _titleGuess = TextEditingController();
         children: [
           for (List fragment in splitTheTitle(wholeTitle: widget.hint.hiddenTitleAsList, maxlength: maxLength))
               CurrentTitle(title: fragment as List<String>, titleLetterWidth: titleLetterWidth,),
-          const Text("Input your guess. If you're off, you lose.",textAlign: TextAlign.center,),
+          const SizedBox(height: 30),
+          const Text("Input your guess. If you're wrong, you lose.",textAlign: TextAlign.center,),
+          
           Expanded(
           child: TextField(
+            maxLines: 2,
+            minLines: 2,
             autofocus: true,
             textCapitalization: TextCapitalization.characters,
             enabled: true,
             autocorrect: false,
             controller: _titleGuess,
-            maxLength: 40,
-            decoration: const InputDecoration(
-                label: Text("..and write it down")),
           ),
         ),
         ],
       ),
       
       actions: <Widget>[
-        ElevatedButton(
+        Row(
+        children: [
+          ElevatedButton(
           child: const Text('Nevermind'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
+        const Spacer(),
         ElevatedButton(
           child: const Text('Confirm Guess'),
           onPressed: () {
@@ -72,6 +88,8 @@ final _titleGuess = TextEditingController();
             print("checking inside");
             widget.checkTitle(widget.hint.cleanTitle, _titleGuess.text);
           },
+        ),
+        ],
         ),
       ],
     );

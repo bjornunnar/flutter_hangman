@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hangman/widgets/hangman.dart';
+import 'package:hangman/widgets/start-screen/hangman.dart';
 import 'package:flutter/services.dart';
 
 void main() {

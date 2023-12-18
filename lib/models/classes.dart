@@ -69,7 +69,8 @@ class ResponsiveSizes{
     required this.numberOfLetters,
   });
 
+  // getter contains a formula to approximate a safe width for each letter, based on the device width and set padding
   double get letterWidth{
-    return (availableWidth-(padding*2*numberOfLetters))/(numberOfLetters+1.4);
+    return (availableWidth-(padding*2*numberOfLetters))/(numberOfLetters+1.8);
   }
 }

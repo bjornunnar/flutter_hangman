@@ -3,6 +3,11 @@
 // using the varNames below, then run
 // 'dart run build_runner build' to generate the env.g.dart file
 // and add both .env and env.g.dart to .gitignore
+
+// in this setup, the .env at root looks like this:
+// TMDB_KEY=<string without "">
+// TMDB_TOKEN=<string without "">
+
 import 'package:envied/envied.dart';
 
 part 'env.g.dart';

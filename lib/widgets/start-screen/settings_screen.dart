@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
-import 'package:hangman/widgets/custom_title_input.dart';
-import 'package:hangman/widgets/custom_year_input.dart';
+import 'package:hangman/widgets/start-screen/custom_title_input.dart';
+import 'package:hangman/widgets/start-screen/custom_year_input.dart';
 
 class SettingsOverlay extends StatefulWidget {
   SettingsOverlay({
@@ -47,6 +47,18 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     yearController.dispose();
     super.dispose();
   }
+
+  // display all characters in the text input field as capitalized
+  @override
+    void initState() {
+      super.initState();
+      titleController.addListener(() {
+        final text = titleController.text;
+        titleController.value = titleController.value.copyWith(
+          text: text.toUpperCase(), // Force uppercase for the text
+        );
+      });
+    }
 
   // updates the value of the difficulty slider.
   void sliderUpdate(double value) {
@@ -133,71 +145,81 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
     // get the text labels for the difficulty settings, and set style for headers
     List difficultyLabelsList = widget.currentSettings.difficultyLabels;
-    const textHeaders = TextStyle(fontSize: 18,fontWeight: FontWeight.bold,);
+    const textHeaders = TextStyle(fontSize: 16,fontWeight: FontWeight.bold,);
 
     // checking if user already saved custom settings, and enabling those
     if (widget.currentSettings.customTitle != null && widget.currentSettings.customTitle!.isNotEmpty){widget.titleIsChecked = true;}
     if (widget.currentSettings.customYear != null){widget.yearIsChecked = true;}
 
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text("Difficulty",
-            style: textHeaders),
-          Slider(
-              value: sliderDifficultySetting,
-              label: widget.currentSettings.labels[sliderDifficultySetting],
-              min: 1,
-              max: 5,
-              divisions: 4,
-              onChanged: (double newValue) {
-                sliderUpdate(newValue);
-              }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              for (int i = 1; i <= 5; i++)
-                Text(
-                  '${difficultyLabelsList[i-1]}', // Display the difficulty settings
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: sliderDifficultySetting == i.toDouble()
-                        ? Colors.blue // Highlight the selected value
-                        : null
+    // makes space for the keyboard if it is present
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 30, 30, keyboardSpace + 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text("Settings", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            const Text("Difficulty",
+              style: textHeaders),
+        
+            Slider(
+                value: sliderDifficultySetting,
+                label: widget.currentSettings.labels[sliderDifficultySetting],
+                min: 1,
+                max: 5,
+                divisions: 4,
+                onChanged: (double newValue) {
+                  sliderUpdate(newValue);
+                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (int i = 1; i <= 5; i++)
+                  Text(
+                    '${difficultyLabelsList[i-1]}', // Display the difficulty settings
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: sliderDifficultySetting == i.toDouble()
+                          ? Colors.blue // Highlight the selected value
+                          : null
+                    ),
                   ),
-                ),
+                ],
+              ),
+            const SizedBox(height: 10),
+            const Text("A harder difficulty setting will give you fewer tries to guess the title, as well as a wider range of possible movie titles",
+              textAlign: TextAlign.center,),
+            const SizedBox(height: 20,),
+            const Text("You can choose a title to play with, or the movie release year you would like to play.",textAlign: TextAlign.center,),
+            const Text("The release year will be approximated.",textAlign: TextAlign.center,),
+            const Text("Note that these are optional, and you can only pick one or the other!", style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+            const SizedBox(height: 30),
+            const Text("Pick the Title",
+            style: textHeaders,), 
+            CustomTitleSetting(titleController: titleController, titleIsChecked: widget.titleIsChecked, enableCustomTitle: enableCustomTitle),
+              const SizedBox(height: 20),
+            const Text("Pick the Year",
+            style: textHeaders),
+            CustomYearSetting(yearController: yearController, yearIsChecked: widget.yearIsChecked, enableCustomYear: enableCustomYear),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(
+                          context); // closes the overlay by 'popping' the context given to the current build method
+                    },
+                    child: const Text("Nevermind")),
+                ElevatedButton(
+                    onPressed: _onSaveSettings,
+                    child: const Text("Save Settings")),
               ],
-            ),
-          const SizedBox(height: 50,),
-          const Text("The options below are.. optional.",textAlign: TextAlign.center,),
-          const Text("You can choose a title to play with, or the movie release year you would like to play.",textAlign: TextAlign.center,),
-          const Text("The release year will be approximated.",textAlign: TextAlign.center,),
-          const Text("Note that you can only have one or the other!", style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
-          const SizedBox(height: 30),
-          const Text("Pick the Title",
-          style: textHeaders,), 
-          CustomTitleSetting(titleController: titleController, titleIsChecked: widget.titleIsChecked, enableCustomTitle: enableCustomTitle),
-            const SizedBox(height: 50),
-          const Text("Pick the Year",
-          style: textHeaders),
-          CustomYearSetting(yearController: yearController, yearIsChecked: widget.yearIsChecked, enableCustomYear: enableCustomYear),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(
-                        context); // closes the overlay by 'popping' the context given to the current build method
-                  },
-                  child: const Text("Nevermind")),
-              ElevatedButton(
-                  onPressed: _onSaveSettings,
-                  child: const Text("Save Settings")),
-            ],
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

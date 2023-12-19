@@ -18,3 +18,5 @@ The titles are "sanitized" to get rid of non-english language characters.
 The user guesses one letter at a time until they win or lose.
 
 Or they can choose to guess the entire title to win or lose instantly.
+
+The game requires a TMDB API key, which needs to be set locally, details in /lib/env/env.dart .

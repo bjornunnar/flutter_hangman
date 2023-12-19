@@ -132,7 +132,7 @@ class _HangmanState extends State<Hangman> {
                   onPressed: _openSettings, child: const Text("Settings")),
               ElevatedButton(onPressed: _playGame, child: const Text("Play Now!")),
               ],)),
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
               const SizedBox(height: 5),
 

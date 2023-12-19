@@ -78,6 +78,11 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       if (widget.titleIsChecked){
         widget.yearIsChecked = false;
         yearController.text = "";
+        // and we unset the custom Year directly.
+        // it would be better to only save changes when user clicks SAVE
+        // but we need the variable to be empty when the state changes in order
+        // for the checkbox to stay unchecked, when user checks the other one
+        widget.currentSettings.customYear = null; 
         }
     });
   }
@@ -91,7 +96,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       if (widget.yearIsChecked) {
         widget.titleIsChecked = false;
         titleController.text = "";
-        widget.currentSettings.customTitle = "";
+        // this works the same as above
+        widget.currentSettings.customTitle = null;
         }
     });
   }
@@ -148,7 +154,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     const textHeaders = TextStyle(fontSize: 16,fontWeight: FontWeight.bold,);
 
     // checking if user already saved custom settings, and enabling those
-    if (widget.currentSettings.customTitle != null && widget.currentSettings.customTitle!.isNotEmpty){widget.titleIsChecked = true;}
+    if (widget.currentSettings.customTitle != null){widget.titleIsChecked = true;}
     if (widget.currentSettings.customYear != null){widget.yearIsChecked = true;}
 
     // makes space for the keyboard if it is present

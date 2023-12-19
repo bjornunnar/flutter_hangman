@@ -19,6 +19,13 @@ class CustomYearSetting extends StatefulWidget {
 
 class _CustomYearSettingState extends State<CustomYearSetting> {
 
+bool isYearChecked(){
+  if (widget.yearIsChecked){
+    return true;
+  } else {
+    return false;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class _CustomYearSettingState extends State<CustomYearSetting> {
         Checkbox(
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: widget.yearIsChecked,
+          value: isYearChecked(),
           onChanged: (bool? value) {
             setState(() {
               if (value != null){

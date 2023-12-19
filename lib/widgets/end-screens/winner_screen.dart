@@ -14,7 +14,7 @@ class WinnerScreen extends StatelessWidget {
       icon: const Icon(Icons.celebration_outlined),
       title: const Text('You Win!', textAlign: TextAlign.center,),
       content: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: double.infinity - 50,maxWidth: double.infinity - 50), // <-- TODO take a better look at this
+        constraints: const BoxConstraints(maxHeight: double.infinity - 50,maxWidth: double.infinity - 50),
         child: Column(
           children: [
             const Text(
@@ -45,7 +45,6 @@ class WinnerScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        // More buttons and stuff?
       ],
     );
   }

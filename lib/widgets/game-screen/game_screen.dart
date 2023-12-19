@@ -122,7 +122,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   // roll through the hangman images based on number of guesses left
-  // we only have 6 images so easy mode shows the first image for a few turns
+  // we only have 7 images so easy mode shows the first image for a few turns
   int hangmanImageNumber(int tries){
     if (weHaveALoser){
       return 0;
@@ -149,7 +149,7 @@ class _GameScreenState extends State<GameScreen> {
     final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     // onscreen message
-    final onScreenMessage;
+    final String onScreenMessage;
     if (weHaveALoser){onScreenMessage = "You Lost!";}
     else if (weHaveAWinner){onScreenMessage = "You Won!";}
     else {onScreenMessage = "Guess the Title!";}
@@ -162,16 +162,27 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: isDarkMode
-                      ? AssetImage("assets/images/dark-hangman0${hangmanImageNumber(widget.hint.tries)}.png")
-                      : AssetImage("assets/images/hangman0${hangmanImageNumber(widget.hint.tries)}.png"),
-                    )
-                  ),
-                  width: 170,
-                  height: 200,
+                Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: isDarkMode
+                          ? AssetImage("assets/images/dark-hangman0${hangmanImageNumber(widget.hint.tries)}.png")
+                          : AssetImage("assets/images/hangman0${hangmanImageNumber(widget.hint.tries)}.png"),
+                        )
+                      ),
+                      width: 170,
+                      height: 200,
+                    ),
+                    // count down no of fails available to the player
+                    // if at 0 or game is lost, don't show anything
+                    widget.hint.tries < 1 || isGameOver()
+                    ? const SizedBox.shrink()
+                    : widget.hint.tries == 1
+                    ? const Text("Last Chance!")
+                    : Text("${widget.hint.tries} fails left"),
+                  ],
                 ),
                 const Spacer(),
 

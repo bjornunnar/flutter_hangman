@@ -19,6 +19,13 @@ class CustomTitleSetting extends StatefulWidget {
 
 class _CustomTitleSettingState extends State<CustomTitleSetting> {
 
+bool isTitleChecked(){
+  if (widget.titleIsChecked){
+    return true;
+  } else {
+    return false;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class _CustomTitleSettingState extends State<CustomTitleSetting> {
         Checkbox(
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: widget.titleIsChecked,
+          value: isTitleChecked(),
           onChanged: (bool? value) {
             setState(() {
               if (value != null){

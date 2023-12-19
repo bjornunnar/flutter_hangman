@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoserScreenCustom extends StatelessWidget {
-  String customTitle;
-  LoserScreenCustom({super.key, required this.customTitle});
+  final String customTitle;
+  const LoserScreenCustom({super.key, required this.customTitle});
 
   @override
   Widget build(BuildContext context) {

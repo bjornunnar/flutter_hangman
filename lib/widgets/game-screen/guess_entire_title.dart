@@ -85,7 +85,6 @@ final _titleGuess = TextEditingController();
           child: const Text('Confirm Guess'),
           onPressed: () {
             Navigator.of(context).pop();
-            print("checking inside");
             widget.checkTitle(widget.hint.cleanTitle, _titleGuess.text);
           },
         ),

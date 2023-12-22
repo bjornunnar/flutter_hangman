@@ -1,5 +1,7 @@
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/data/clean_string.dart';
+import 'package:hangman/data/set_tries.dart';
+import 'package:hangman/data/give_me_the_thes.dart';
 
 Hint constructHint({Movie? movie, String? customTitle, int? customYear, int difficulty = 3}){
   // If user has a custom title, we convert that one and use it for the Hint
@@ -15,6 +17,10 @@ Hint constructHint({Movie? movie, String? customTitle, int? customYear, int diff
   }
   
   String hiddenTitle = cleanTitle.replaceAll(RegExp(r'[a-zA-Z]'), "_");
+
+  // might make this optional
+  hiddenTitle = giveMeTheThes(cleanTitle, hiddenTitle);
+
   List<String> cleanTitleAsList = cleanTitle.split("");
   List<String> hiddenTitleAsList = hiddenTitle.split("");
   List<String> guessedLetters = [];
@@ -32,29 +38,5 @@ Hint constructHint({Movie? movie, String? customTitle, int? customYear, int diff
   return currentHint;
 }
 
-int setTries(int difficulty){
-  // set default value for tries, and then we modify based on the difficulty setting
-  int tries = 6; 
-  switch (difficulty){
-    case 5:{
-      tries = 1;
-      break;
-    }
-    case 4:{
-      tries = 3;
-      break;
-    }
-    case 2:{
-      tries = 8;
-      break;
-    }
-    case 1:{
-      tries = 12;
-      break;
-    }
-    default:{
-      break;
-    }
-  }
-  return tries;
-}
+
+

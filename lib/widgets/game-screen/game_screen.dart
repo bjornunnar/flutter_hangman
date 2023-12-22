@@ -18,10 +18,12 @@ import 'package:hangman/widgets/end-screens/winner_screen_custom.dart';
 class GameScreen extends StatefulWidget {
   Hint hint;
   final Function quitGame;
+  final Function restart;
   GameScreen({
     super.key, 
     required this.hint, 
-    required this.quitGame
+    required this.quitGame,
+    required this.restart
     });
 
   @override
@@ -115,6 +117,14 @@ class _GameScreenState extends State<GameScreen> {
       weHaveALoser = true;
     });
     _loserDialog();
+  }
+
+  void _onRestart(){
+    setState(() {
+      weHaveALoser = false;
+      weHaveAWinner = false;
+      widget.restart();
+    });
   }
 
   void _onQuit() {
@@ -212,13 +222,13 @@ class _GameScreenState extends State<GameScreen> {
               ],
             ),
             Text(onScreenMessage,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,),
             // check if game is won or lost. if so, we just get the full title to display.
             // if not, we display what the user has so far
             // it's split into lines depending on the screen width and length of words
             for (List fragment in splitTheTitle(
-              wholeTitle: (weHaveALoser || weHaveAWinner) 
+              wholeTitle: (isGameOver()) 
               ? widget.hint.cleanTitleAsList 
               : widget.hint.hiddenTitleAsList, 
               maxlength: maxLength))
@@ -230,14 +240,21 @@ class _GameScreenState extends State<GameScreen> {
                   icon: const Icon(Icons.backspace_outlined, size: 16),
                   onPressed: _onQuit,
                   label: const Text("I Quit",)), 
+                if (!isGameOver())
                 ElevatedButton.icon(
-                  onPressed: isGameOver() ? (){} : _onGiveUp,
+                  onPressed: _onGiveUp,
                   icon: const Icon(Icons.question_answer_outlined, size: 16,),
                   label: const Text("Tell Me")),
+                if (!isGameOver())
                 ElevatedButton.icon(
-                  onPressed: isGameOver() ? (){} : _openGuessEntireTitle,
+                  onPressed: _openGuessEntireTitle,
                   icon: const Icon(Icons.expand_circle_down_outlined, size: 16),
                   label: const Text("I Have It!")),
+                if (isGameOver())
+                ElevatedButton.icon(
+                  onPressed: _onRestart,
+                  icon: const Icon(Icons.replay_circle_filled_rounded, size: 16),
+                  label: const Text("Go Again!")),
               ],
             ),
       

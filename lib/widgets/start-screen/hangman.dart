@@ -64,7 +64,7 @@ class _HangmanState extends State<Hangman> {
         currentSettings: currentSettings, updateSettings: updateSettings));
   }
 
-  void _playGame() async {
+  void playGame() async {
     // if user sets a title/word, that's all we need
     if (currentSettings.customTitle != null) {
       Hint currentHint = constructHint(
@@ -72,7 +72,7 @@ class _HangmanState extends State<Hangman> {
           difficulty: currentSettings.difficulty);
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
       });
       // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
@@ -83,7 +83,7 @@ class _HangmanState extends State<Hangman> {
             year: currentSettings.customYear!));
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
       });
       // otherwise we just make the call using the current difficulty
     } else {
@@ -92,7 +92,7 @@ class _HangmanState extends State<Hangman> {
         movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame);
+        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
       });
     }
   }
@@ -130,14 +130,14 @@ class _HangmanState extends State<Hangman> {
                 children: [
                   ElevatedButton(
                   onPressed: _openSettings, child: const Text("Settings")),
-              ElevatedButton(onPressed: _playGame, child: const Text("Play Now!")),
+              ElevatedButton(onPressed: playGame, child: const Text("Play Now!")),
               ],)),
               const SizedBox(height: 15),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
               const SizedBox(height: 5),
 
               // if there is a custom title, allow user to see it
-              currentSettings.customTitle != null || currentSettings.customTitle == ""
+              currentSettings.customTitle != null && currentSettings.customTitle != ""
               ? GestureDetector(
                 onTap:() {
                   setState(() {
@@ -152,13 +152,21 @@ class _HangmanState extends State<Hangman> {
                 )
               : const Text("Playing with a Random Movie Title"),
               const SizedBox(height: 5),
-              (displayCustomTitle && currentSettings.customTitle != null)
-              ? Container(
+              displayCustomTitle
+              ? 
+              GestureDetector(
+                onTap:() {
+                  setState(() {
+                    displayCustomTitle = !displayCustomTitle;
+                  });
+                },
+                child:Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFB71C1C))),
                 child: Padding(padding: const EdgeInsets.all(5), child: Text(currentSettings.customTitle!,)  
                   
                 )
+              )
               )
               : const SizedBox.shrink(),
               // if a custom year is set, allow user to view it
@@ -177,14 +185,21 @@ class _HangmanState extends State<Hangman> {
                   )
                 )
               : const Text("Playing with a Random Release Year"),
-              (displayCustomYear && currentSettings.customYear != null) 
-              ? Container(
+              displayCustomYear
+              ? GestureDetector(
+                onTap:() {
+                  setState(() {
+                    displayCustomYear = !displayCustomYear;
+                  });
+                },
+                child:Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFFB71C1C))),
                 child: Padding(
                   padding: const EdgeInsets.all(5), 
                   child: Text(currentSettings.customYear!.toString())
                 )
+              )
               )
               : const SizedBox.shrink(),
               

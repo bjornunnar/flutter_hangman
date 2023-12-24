@@ -33,11 +33,13 @@ class Hint {
 }
 
 class Settings{
+  bool marathonMode;
   int difficulty;
   int? customYear;
   String? customTitle;
 
   Settings({
+    this.marathonMode = false,
     required this.difficulty,
     this.customYear,
     this.customTitle,

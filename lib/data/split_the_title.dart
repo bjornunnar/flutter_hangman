@@ -6,6 +6,7 @@
 
     List<String> titleWordForWord = wholeTitle.join().split(" ");
     List<List<String>> fixedTitle = [];
+    // TODO -- check if the first word, and then every word, is >maxlength. if so split in two
     String titleFragment = titleWordForWord[0].toString();
 
     // run through the fragmented list, see if the two current words are more than the max,

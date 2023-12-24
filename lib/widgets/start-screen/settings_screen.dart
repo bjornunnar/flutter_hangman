@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/start-screen/custom_title_input.dart';
 import 'package:hangman/widgets/start-screen/custom_year_input.dart';
+import 'package:hangman/widgets/start-screen/marathon_mode_checkbox.dart';
 
 class SettingsOverlay extends StatefulWidget {
   SettingsOverlay({
@@ -198,6 +199,8 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
             const SizedBox(height: 10),
             const Text("A harder difficulty setting will give you fewer tries to guess the title, as well as a wider range of possible movie titles",
               textAlign: TextAlign.center,),
+            const SizedBox(height: 10),
+            MarathonModeCheckbox(marathonMode: widget.currentSettings.marathonMode),
             const SizedBox(height: 20,),
             const Text("You can choose a title to play with, or the movie release year you would like to play.",textAlign: TextAlign.center,),
             const Text("The release year will be approximated.",textAlign: TextAlign.center,),

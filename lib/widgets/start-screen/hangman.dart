@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hangman/data/construct_hint.dart';
 import 'package:hangman/data/movie_details.dart';
@@ -65,6 +66,7 @@ class _HangmanState extends State<Hangman> {
   }
 
   void playGame() async {
+    // TODO -- check if marathon mode is not active, if so, wipe the guessed letters list
     // if user sets a title/word, that's all we need
     if (currentSettings.customTitle != null) {
       Hint currentHint = constructHint(

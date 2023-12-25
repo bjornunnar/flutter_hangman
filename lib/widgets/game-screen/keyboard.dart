@@ -8,12 +8,12 @@ import 'package:hangman/models/classes.dart';
 class Keyboard extends StatefulWidget {
   final Function confirmGuess;
   final ResponsiveSizes titleLetterWidth;
-  bool disableKeyboard; // TODO, this is not working yet
+  bool disableKeyboard;
   Keyboard({
     super.key,
     required this.confirmGuess,
     required this.titleLetterWidth,
-    required this.disableKeyboard
+    required this.disableKeyboard,
     });
 
   @override
@@ -27,6 +27,7 @@ class _KeyboardState extends State<Keyboard> {
   String activeButtonIndex = "";
 
   List<List<String>> qwertyKeyboard = generateKeyboard();
+
 
   void setActiveButton(String index){
     setState(() {
@@ -48,6 +49,7 @@ class _KeyboardState extends State<Keyboard> {
           row.remove(currentLetter);
       }
       currentLetter = "";
+      activeButtonIndex = "";
     }
     );
     }
@@ -55,12 +57,11 @@ class _KeyboardState extends State<Keyboard> {
 
   @override
   Widget build(BuildContext context) {
+
     widget.titleLetterWidth.numberOfLetters = 10;
     final keyWidth = widget.titleLetterWidth.letterWidth;
-    // final availableWidth = MediaQuery.of(context).size.width;
-    // const double padding = 3.0;
-    // final keyWidth = (availableWidth-(padding*2*10))/11;
-    final keyHeight = keyWidth;
+    final keyHeight = keyWidth*1.3;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       

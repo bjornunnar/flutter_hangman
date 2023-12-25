@@ -19,11 +19,13 @@ class GameScreen extends StatefulWidget {
   Hint hint;
   final Function quitGame;
   final Function restart;
+  final bool marathonMode;
   GameScreen({
     super.key, 
     required this.hint, 
     required this.quitGame,
-    required this.restart
+    required this.restart,
+    required this.marathonMode,
     });
 
   @override
@@ -35,6 +37,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool weHaveAWinner = false;
   bool weHaveALoser = false;
+  bool rebuildKeyboard = false;
   
   bool isGameOver(){
     return weHaveALoser || weHaveAWinner;
@@ -265,7 +268,7 @@ class _GameScreenState extends State<GameScreen> {
                 Keyboard(
                   confirmGuess: confirmGuess, 
                   titleLetterWidth: titleLetterWidth, 
-                  disableKeyboard: isGameOver()
+                  disableKeyboard: isGameOver(),
                 ),
               ],
             )

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hangman/data/construct_hint.dart';
 import 'package:hangman/data/movie_details.dart';
@@ -18,6 +17,7 @@ class Hangman extends StatefulWidget {
 
 class _HangmanState extends State<Hangman> {
   bool gameOn = false; // game has not started yet
+  int gameNumber = 0;
   Widget gameScreenWaiting = Container(); // placeholder value
 
   // setting default settings w/ medium difficulty
@@ -66,7 +66,6 @@ class _HangmanState extends State<Hangman> {
   }
 
   void playGame() async {
-    // TODO -- check if marathon mode is not active, if so, wipe the guessed letters list
     // if user sets a title/word, that's all we need
     if (currentSettings.customTitle != null) {
       Hint currentHint = constructHint(
@@ -74,7 +73,12 @@ class _HangmanState extends State<Hangman> {
           difficulty: currentSettings.difficulty);
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
+        gameNumber +=1;
+        gameScreenWaiting = GameScreen(
+          hint: currentHint, 
+          marathonMode: currentSettings.marathonMode, 
+          quitGame: quitGame, 
+          restart: playGame);
       });
       // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
@@ -85,7 +89,12 @@ class _HangmanState extends State<Hangman> {
             year: currentSettings.customYear!));
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
+        gameNumber +=1;
+        gameScreenWaiting = GameScreen(
+          hint: currentHint, 
+          marathonMode: currentSettings.marathonMode, 
+          quitGame: quitGame, 
+          restart: playGame);
       });
       // otherwise we just make the call using the current difficulty
     } else {
@@ -94,7 +103,12 @@ class _HangmanState extends State<Hangman> {
         movie: await getMovie(difficulty: currentSettings.difficulty));
       setState(() {
         gameOn = true;
-        gameScreenWaiting = GameScreen(hint: currentHint, quitGame: quitGame, restart: playGame);
+        gameNumber +=1;
+        gameScreenWaiting = GameScreen(
+          hint: currentHint, 
+          marathonMode: currentSettings.marathonMode, 
+          quitGame: quitGame, 
+          restart: playGame);
       });
     }
   }

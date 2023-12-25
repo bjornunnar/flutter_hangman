@@ -34,7 +34,7 @@ Hint constructHint({Movie? movie, String? customTitle, int? customYear, int diff
     cleanTitleAsList: cleanTitleAsList, 
     hiddenTitleAsList: hiddenTitleAsList, 
     guessedLetters: guessedLetters,
-    tries: tries);
+    tries: tries,);
   return currentHint;
 }
 

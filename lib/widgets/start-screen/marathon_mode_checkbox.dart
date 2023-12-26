@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MarathonModeCheckbox extends StatefulWidget {
-  bool marathonMode;
-  MarathonModeCheckbox({
+  final bool marathonMode;
+  final Function toggleMarathonMode;
+  const MarathonModeCheckbox({
     super.key, 
     required this.marathonMode,
+    required this.toggleMarathonMode,
     });
 
   @override
@@ -14,8 +16,14 @@ class MarathonModeCheckbox extends StatefulWidget {
 class _MarathonModeCheckboxState extends State<MarathonModeCheckbox> {
 
 bool isMarathonModeChecked(){
-  return widget.marathonMode;
+  if (widget.marathonMode){
+    return true;
+  } else {
+    return false;
+  }
 }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +54,11 @@ bool isMarathonModeChecked(){
         Checkbox(
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: isMarathonModeChecked(),
+          value: widget.marathonMode,
           onChanged: (bool? value) {
             setState(() {
               if (value != null){
-                widget.marathonMode = value;
+                widget.toggleMarathonMode(value);
               }
             });
           },

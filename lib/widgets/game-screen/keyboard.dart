@@ -9,11 +9,15 @@ class Keyboard extends StatefulWidget {
   final Function confirmGuess;
   final ResponsiveSizes titleLetterWidth;
   bool disableKeyboard;
+  final int numberOfGuesses;
+  final bool marathonMode;
   Keyboard({
     super.key,
     required this.confirmGuess,
     required this.titleLetterWidth,
     required this.disableKeyboard,
+    required this.numberOfGuesses,
+    required this.marathonMode,
     });
 
   @override
@@ -57,6 +61,9 @@ class _KeyboardState extends State<Keyboard> {
 
   @override
   Widget build(BuildContext context) {
+
+    // rebuild keyboard if we are starting a new game
+    if (widget.numberOfGuesses == 0 && !(widget.marathonMode)){qwertyKeyboard = generateKeyboard();}
 
     widget.titleLetterWidth.numberOfLetters = 10;
     final keyWidth = widget.titleLetterWidth.letterWidth;

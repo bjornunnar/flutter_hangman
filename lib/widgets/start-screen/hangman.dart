@@ -31,7 +31,17 @@ class _HangmanState extends State<Hangman> {
   void quitGame() {
     setState(() {
       gameOn = false;
-      currentSettings = Settings(difficulty: currentSettings.difficulty);
+      gameNumber = 0;
+      currentSettings = Settings(
+        difficulty: currentSettings.difficulty, 
+        marathonMode: currentSettings.marathonMode
+        );
+    });
+  }
+
+  void resetGameCounter(){
+    setState(() {
+      gameNumber = 0;
     });
   }
 
@@ -76,9 +86,11 @@ class _HangmanState extends State<Hangman> {
         gameNumber +=1;
         gameScreenWaiting = GameScreen(
           hint: currentHint, 
-          marathonMode: currentSettings.marathonMode, 
+          marathonMode: currentSettings.marathonMode,
+          gameNumber: gameNumber,
           quitGame: quitGame, 
-          restart: playGame);
+          restart: playGame,
+          resetGameCounter: resetGameCounter);
       });
       // if user sets a year, we use that in our call to tmdb
     } else if (currentSettings.customYear != null) {
@@ -93,8 +105,10 @@ class _HangmanState extends State<Hangman> {
         gameScreenWaiting = GameScreen(
           hint: currentHint, 
           marathonMode: currentSettings.marathonMode, 
+          gameNumber: gameNumber,
           quitGame: quitGame, 
-          restart: playGame);
+          restart: playGame,
+          resetGameCounter: resetGameCounter);
       });
       // otherwise we just make the call using the current difficulty
     } else {
@@ -107,8 +121,10 @@ class _HangmanState extends State<Hangman> {
         gameScreenWaiting = GameScreen(
           hint: currentHint, 
           marathonMode: currentSettings.marathonMode, 
+          gameNumber: gameNumber,
           quitGame: quitGame, 
-          restart: playGame);
+          restart: playGame,
+          resetGameCounter: resetGameCounter);
       });
     }
   }
@@ -151,7 +167,10 @@ class _HangmanState extends State<Hangman> {
               const SizedBox(height: 15),
               Text("Difficulty setting: ${currentSettings.labels[currentSettings.difficulty]}"),
               const SizedBox(height: 5),
-
+              currentSettings.marathonMode
+              ? const Text("Playing in Marathon Mode")
+              : const SizedBox.shrink(),
+              const SizedBox(height: 5),
               // if there is a custom title, allow user to see it
               currentSettings.customTitle != null && currentSettings.customTitle != ""
               ? GestureDetector(

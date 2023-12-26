@@ -19,13 +19,17 @@ class GameScreen extends StatefulWidget {
   Hint hint;
   final Function quitGame;
   final Function restart;
+  final Function resetGameCounter;
   final bool marathonMode;
+  int gameNumber;
   GameScreen({
     super.key, 
     required this.hint, 
     required this.quitGame,
     required this.restart,
+    required this.resetGameCounter,
     required this.marathonMode,
+    required this.gameNumber,
     });
 
   @override
@@ -37,7 +41,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool weHaveAWinner = false;
   bool weHaveALoser = false;
-  bool rebuildKeyboard = false;
+
   
   bool isGameOver(){
     return weHaveALoser || weHaveAWinner;
@@ -45,6 +49,9 @@ class _GameScreenState extends State<GameScreen> {
   
   void confirmGuess(String letter) {
       setState(() {
+        // add 1 to no of guesses
+        // we use this to know when to rebuild the keyboard
+        widget.hint.guesses += 1;
         // getting the current length of the guessed letters list, to check against
         // the same list after we run through and replace
         // there should be a better way to do this..?
@@ -56,6 +63,7 @@ class _GameScreenState extends State<GameScreen> {
           // drop number of available tries by 1 and check if game is lost
           weHaveALoser = checkLoser(widget.hint);
           if (weHaveALoser){
+
             _loserDialog();
           }
         } else {
@@ -124,6 +132,7 @@ class _GameScreenState extends State<GameScreen> {
 
   void _onRestart(){
     setState(() {
+      if (weHaveALoser){widget.resetGameCounter();}
       weHaveALoser = false;
       weHaveAWinner = false;
       widget.restart();
@@ -188,13 +197,14 @@ class _GameScreenState extends State<GameScreen> {
                       width: 170,
                       height: 200,
                     ),
+                    Text("Game ${widget.gameNumber}"),
                     // count down no of fails available to the player
                     // if at 0 or game is lost, don't show anything
                     widget.hint.tries < 1 || isGameOver()
                     ? const SizedBox.shrink()
                     : widget.hint.tries == 1
                     ? const Text("Last Chance!")
-                    : Text("${widget.hint.tries} fails left"),
+                    : Text("Fails left: ${widget.hint.tries}"),
                   ],
                 ),
                 const Spacer(),
@@ -269,6 +279,8 @@ class _GameScreenState extends State<GameScreen> {
                   confirmGuess: confirmGuess, 
                   titleLetterWidth: titleLetterWidth, 
                   disableKeyboard: isGameOver(),
+                  numberOfGuesses: widget.hint.guesses,
+                  marathonMode: widget.marathonMode,
                 ),
               ],
             )

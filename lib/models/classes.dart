@@ -16,15 +16,18 @@ class Movie {
 class Hint {
   Movie? movie;
   int tries;
+  int guesses;
   String cleanTitle;
   List<String> cleanTitleAsList;
   String hiddenTitle;
   List<String> hiddenTitleAsList;
   List<String> guessedLetters;
 
+
   Hint({
     this.movie,
     this.tries = 6,
+    this.guesses = 0,
     required this.cleanTitle, 
     required this.cleanTitleAsList, 
     required this.hiddenTitle, 

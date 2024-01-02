@@ -16,15 +16,18 @@ class Movie {
 class Hint {
   Movie? movie;
   int tries;
+  int guesses;
   String cleanTitle;
   List<String> cleanTitleAsList;
   String hiddenTitle;
   List<String> hiddenTitleAsList;
   List<String> guessedLetters;
 
+
   Hint({
     this.movie,
     this.tries = 6,
+    this.guesses = 0,
     required this.cleanTitle, 
     required this.cleanTitleAsList, 
     required this.hiddenTitle, 
@@ -33,11 +36,13 @@ class Hint {
 }
 
 class Settings{
+  bool marathonMode;
   int difficulty;
   int? customYear;
   String? customTitle;
 
   Settings({
+    this.marathonMode = false,
     required this.difficulty,
     this.customYear,
     this.customTitle,

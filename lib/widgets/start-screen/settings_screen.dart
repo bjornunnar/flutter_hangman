@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hangman/models/classes.dart';
 import 'package:hangman/widgets/start-screen/custom_title_input.dart';
 import 'package:hangman/widgets/start-screen/custom_year_input.dart';
+import 'package:hangman/widgets/start-screen/marathon_mode_checkbox.dart';
 
 class SettingsOverlay extends StatefulWidget {
   SettingsOverlay({
@@ -17,6 +18,7 @@ class SettingsOverlay extends StatefulWidget {
   // both custom settings are disabled by default
   bool titleIsChecked = false;
   bool yearIsChecked = false;
+  late bool marathonModeIsChecked = currentSettings.marathonMode;
 
   @override
   State<SettingsOverlay> createState() {
@@ -38,7 +40,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     );
   late double sliderDifficultySetting =
       (widget.currentSettings.difficulty).toDouble();
-
+      
   // tells flutter to shut down the TextEditingController when the overlay is closed
   // otherwise it lives on in memory
   @override
@@ -102,11 +104,18 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     });
   }
 
+  void toggleMarathonMode(bool value){
+    setState(() {
+      widget.marathonModeIsChecked = value;
+      print("marathonmodeischecked: ${widget.marathonModeIsChecked}");
+    });
+  }
+
   void _onSaveSettings() {
     // logic to save current inputs
     // check if the input fields are empty first, if so we don't include them.
     int newDifficulty = sliderDifficultySetting.floor();
-    Settings newSettings = Settings(difficulty: newDifficulty);
+    Settings newSettings = Settings(difficulty: newDifficulty, marathonMode: widget.marathonModeIsChecked);
     if (titleController.text.isNotEmpty) {
       newSettings.customTitle = titleController.text;
     }
@@ -198,6 +207,11 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
             const SizedBox(height: 10),
             const Text("A harder difficulty setting will give you fewer tries to guess the title, as well as a wider range of possible movie titles",
               textAlign: TextAlign.center,),
+            const SizedBox(height: 10),
+            MarathonModeCheckbox(
+              marathonMode: widget.marathonModeIsChecked,
+              toggleMarathonMode: toggleMarathonMode,
+              ),
             const SizedBox(height: 20,),
             const Text("You can choose a title to play with, or the movie release year you would like to play.",textAlign: TextAlign.center,),
             const Text("The release year will be approximated.",textAlign: TextAlign.center,),

@@ -18,7 +18,7 @@ class SettingsOverlay extends StatefulWidget {
   // both custom settings are disabled by default
   bool titleIsChecked = false;
   bool yearIsChecked = false;
-  bool marathonModeIsChecked = false;
+  late bool marathonModeIsChecked = currentSettings.marathonMode;
 
   @override
   State<SettingsOverlay> createState() {
@@ -40,7 +40,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
     );
   late double sliderDifficultySetting =
       (widget.currentSettings.difficulty).toDouble();
-
+      
   // tells flutter to shut down the TextEditingController when the overlay is closed
   // otherwise it lives on in memory
   @override
@@ -107,6 +107,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   void toggleMarathonMode(bool value){
     setState(() {
       widget.marathonModeIsChecked = value;
+      print("marathonmodeischecked: ${widget.marathonModeIsChecked}");
     });
   }
 
@@ -208,7 +209,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
               textAlign: TextAlign.center,),
             const SizedBox(height: 10),
             MarathonModeCheckbox(
-              marathonMode: widget.currentSettings.marathonMode,
+              marathonMode: widget.marathonModeIsChecked,
               toggleMarathonMode: toggleMarathonMode,
               ),
             const SizedBox(height: 20,),

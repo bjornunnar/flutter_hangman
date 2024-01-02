@@ -281,6 +281,7 @@ class _GameScreenState extends State<GameScreen> {
                   disableKeyboard: isGameOver(),
                   numberOfGuesses: widget.hint.guesses,
                   marathonMode: widget.marathonMode,
+                  gameNumber: widget.gameNumber,
                 ),
               ],
             )

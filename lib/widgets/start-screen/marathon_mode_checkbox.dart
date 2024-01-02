@@ -46,6 +46,8 @@ bool isMarathonModeChecked(){
       return Colors.white;
     }
 
+    print("widget.marathonmode: ${widget.marathonMode}");
+
     return Row(
       children: [
         const Expanded(

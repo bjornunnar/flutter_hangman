@@ -11,6 +11,7 @@ class Keyboard extends StatefulWidget {
   bool disableKeyboard;
   final int numberOfGuesses;
   final bool marathonMode;
+  final int gameNumber;
   Keyboard({
     super.key,
     required this.confirmGuess,
@@ -18,6 +19,7 @@ class Keyboard extends StatefulWidget {
     required this.disableKeyboard,
     required this.numberOfGuesses,
     required this.marathonMode,
+    required this.gameNumber,
     });
 
   @override
@@ -62,8 +64,8 @@ class _KeyboardState extends State<Keyboard> {
   @override
   Widget build(BuildContext context) {
 
-    // rebuild keyboard if we are starting a new game
-    if (widget.numberOfGuesses == 0 && !(widget.marathonMode)){qwertyKeyboard = generateKeyboard();}
+    // rebuild keyboard if we are starting a new game OR if we are restarting after loss in marathon mode
+    if ((widget.numberOfGuesses == 0 && !(widget.marathonMode) || widget.numberOfGuesses == 0 && widget.gameNumber == 1)){qwertyKeyboard = generateKeyboard();}
 
     widget.titleLetterWidth.numberOfLetters = 10;
     final keyWidth = widget.titleLetterWidth.letterWidth;

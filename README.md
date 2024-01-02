@@ -13,6 +13,8 @@ The user can also set a custom title/word/phrase to play with.
 
 The user can only set one of these two custom options, and if either is given, they can toggle on/off its visibility on the starting screen.
 
+The user can opt to play in "marathon mode", which does not reset the keyboard after a successful round.
+
 The titles are "sanitized" to get rid of non-english language characters.
 
 The user guesses one letter at a time until they win or lose.

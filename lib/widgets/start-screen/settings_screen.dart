@@ -107,7 +107,6 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
   void toggleMarathonMode(bool value){
     setState(() {
       widget.marathonModeIsChecked = value;
-      print("marathonmodeischecked: ${widget.marathonModeIsChecked}");
     });
   }
 
